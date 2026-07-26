@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@academy/courses-api/*": ["./src/*"]
+    },
+    "types": ["node"],
+    "plugins": [
+      {
+        "name": "gql.tada/ts-plugin",
+        "schema": "./src/graphql/schema.graphql",
+        "tadaOutputLocation": "./src/graphql/graphql-env.d.ts"
+      }
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/graphql/graphql-env.d.ts"
+  ],
+  "exclude": ["node_modules", "dist"]
+}

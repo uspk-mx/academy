@@ -1,0 +1,35 @@
+{
+  "name": "@academy/courses-api",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write \"**/*.{ts,tsx}\"",
+    "typecheck": "tsc --noEmit",
+    "gql:doctor": "gql-tada doctor",
+    "gql:generate": "gql-tada generate output",
+    "gql:check": "gql-tada check"
+  },
+  "dependencies": {
+    "@academy/graphql-utils": "workspace:*",
+    "@academy/user-ui": "workspace:*",
+    "gql.tada": "^1.11.2",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@turbo/gen": "^2.9.15",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^6"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./graphql/*": "./src/graphql/*.ts",
+    "./loaders/*": "./src/loaders/*.ts",
+    "./utils": "./src/utils.ts",
+    "./api-client": "./src/api-client.ts"
+  }
+}

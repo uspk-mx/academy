@@ -15,10 +15,10 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "@/*": ["./app/*"],
-      "@workspace/ui/*": ["../../packages/ui/src/*"]
+      "@academy/user-ui/*": ["../../packages/user-ui/src/*"]
     },
     "esModuleInterop": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

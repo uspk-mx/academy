@@ -1,0 +1,1624 @@
+"""
+Directs the executor to defer this fragment when the `if` argument is true or undefined.
+"""
+directive @defer(
+  """Deferred when true or undefined."""
+  if: Boolean = true
+
+  """Unique name"""
+  label: String
+) on FRAGMENT_SPREAD | INLINE_FRAGMENT
+
+input AddToCartInput {
+  itemId: ID!
+  quantity: Int = 1
+  notes: String
+}
+
+type AdminInvite {
+  id: ID!
+  email: String!
+  companyId: ID!
+  type: String!
+  createdAt: String!
+  expiresAt: String
+  status: String!
+}
+
+type Answer {
+  id: ID!
+  question: Question
+  type: String!
+  title: String!
+  isCorrect: Boolean!
+  image: String
+  gapMatch: String
+  viewFormat: String
+  settings: String
+  order: Int!
+  correctAnswers: [String!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+input AnswerInput {
+  ID: String
+  type: String!
+  title: String!
+  isCorrect: Boolean!
+  image: String
+  gapMatch: String
+  viewFormat: String
+  settings: String
+  order: Int!
+  correctAnswers: [String!]
+  updatedAt: String!
+}
+
+type AttemptQuestion {
+  id: ID!
+  title: String!
+  description: String
+  media: String
+  type: String!
+  mark: Float!
+  options: [String!]
+  sortItems: [String!]
+  matrixLeft: [String!]
+  matrixRight: [String!]
+  blankCount: Int
+}
+
+type AttemptQuiz {
+  id: ID!
+  title: String!
+  description: String
+  timer: Int
+  timeUnit: String
+  passingGrade: Int!
+  maxAttempts: Int
+  attemptsUsed: Int!
+  attemptsLeft: Int
+  questions: [AttemptQuestion!]!
+}
+
+type AuthResult {
+  token: String!
+  role: String!
+}
+
+type Cart {
+  id: ID!
+  userId: ID
+  items: [CartItem!]!
+  subtotal: Float!
+  tax: Float!
+  total: Float!
+  expiresAt: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CartItem {
+  id: ID!
+  cartId: ID!
+  itemType: ItemType!
+  itemId: ID!
+  quantity: Int!
+  unitPrice: Float!
+  notes: String
+  inStock: Boolean!
+  createdAt: String!
+  item: CartItemDetails!
+}
+
+union CartItemDetails = Course | CourseBundle | SubscriptionPlan
+
+type Category {
+  id: ID!
+  name: String!
+  slug: String
+  description: String
+  coursesCount: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Certificate {
+  id: ID!
+  user: User!
+  course: Course!
+  template: CertificateTemplate!
+  issuedAt: String!
+}
+
+type CertificateTemplate {
+  id: ID!
+  name: String!
+  content: String!
+  logoUrl: String
+  background: String
+}
+
+input CertificateTemplateInput {
+  name: String!
+  content: String
+  logoUrl: String
+  background: String
+}
+
+type CheckoutSession {
+  id: ID!
+  url: String!
+  clientSecret: String!
+}
+
+type Company {
+  id: ID!
+  name: String!
+  email: String!
+  address: String
+  taxId: String
+  taxName: String
+  isActive: Boolean
+  logo: String
+  icon: String
+  createdAt: String!
+  updatedAt: String!
+  setupIntentClientSecret: String
+  stripeId: String
+  subscriptions: [CompanySubscription!]!
+}
+
+input CompanyCourseProgressFilter {
+  courseId: ID
+  searchUser: String
+  completed: Boolean
+  limit: Int = 50
+  offset: Int = 0
+}
+
+type CompanyCourseProgressRow {
+  user: User!
+  course: Course!
+  progress: CourseProgress!
+}
+
+type CompanyCourseProgressSummary {
+  course: Course!
+  enrolledCount: Int!
+  startedCount: Int!
+  completedCount: Int!
+  avgProgressPercentage: Float!
+}
+
+input CompanyCoursesFilter {
+  search: String
+  categoryId: ID
+  status: CourseStatus
+  visibility: Visibility
+  limit: Int = 50
+  offset: Int = 0
+}
+
+type CompanyInvite {
+  id: ID!
+  email: String!
+  type: String!
+  codeId: ID
+  companyId: ID
+  companySubscriptionId: ID!
+  createdAt: String!
+  expiresAt: String!
+  status: String!
+  redeemedByUserId: ID
+}
+
+type CompanySubscription {
+  id: ID!
+  company: Company!
+  plan: SubscriptionPlan!
+  stripeSubscriptionId: String!
+  quantity: Int!
+  status: String!
+  createdAt: String!
+  updatedAt: String!
+  activeSubscriptions: [UserSubscription!]!
+  subscriptionCodes: [SubscriptionCode!]!
+  setupIntentClientSecret: String
+}
+
+type CompanyTeamStats {
+  totalMembers: Int!
+  activeMembers: Int!
+  coursesInProgress: Int!
+  coursesCompleted: Int!
+  certificatesEarned: Int!
+  avgProgressPercentage: Float!
+}
+
+type Course {
+  id: ID!
+  title: String!
+  slug: String
+  shortDescription: String
+  description: String
+  instructors: [User!]
+  enrollments: [Enrollment!]
+  metadata: CourseMetadata
+  video: Video
+  tags: [String!]
+  featuredImage: String!
+  price: Float!
+  discountedPrice: Float
+  promotionDuration: Int
+  level: Level
+  duration: Int!
+  requirements: String
+
+  """
+  `requirements` parsed into display items (the column stays free text):
+  newline-delimited, with a comma fallback for legacy single-line values.
+  """
+  requirementsList: [String!]!
+  status: CourseStatus
+  category: Category
+  creatorID: String
+  creator: User
+  progress: CourseProgress
+  topics: [Topic!]
+  reviews: [Review!]
+  certificates: [Certificate!]
+  maxEnrollments: Int
+  extraSettings: [ExtraSettings!]
+  visibility: Visibility
+  scheduledPublishAt: String
+  publishedAt: String
+  prerequisites: [Course!]
+  isUnlocked: Boolean
+  hasAccess: Boolean!
+  learningPaths: [LearningPath!]
+  createdAt: String!
+  updatedAt: String!
+  pricingType: PricingType
+}
+
+type CourseBundle {
+  id: ID!
+  title: String!
+  description: String
+  featuredImage: String!
+  price: Float!
+  subtotalRegularPrice: Float
+  discountType: DiscountType
+  discountValue: Float
+  courses: [Course]!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type CourseEnrollment {
+  course: Course!
+  enrolledAt: String!
+  status: EnrollmentStatus!
+}
+
+type CourseEnrollments {
+  id: ID!
+  user: User!
+  courses: [CourseEnrollment!]!
+}
+
+type CourseMetadata {
+  id: ID
+  course: Course!
+  learnings: String
+
+  """
+  `learnings` parsed into display items (the column stays free text):
+  newline-delimited, with a comma fallback for legacy single-line values.
+  """
+  learningsList: [String!]!
+  benefits: String
+  targetAudience: String
+  materialsIncluded: String
+  requirements: String
+}
+
+input CourseMetadataInput {
+  learnings: String
+  benefits: String
+  targetAudience: String
+  materialsIncluded: String
+  requirementsInstructions: String
+}
+
+type CourseProgress {
+  id: ID!
+  user: User!
+  course: Course!
+  completedLessons: Int
+  completedQuizzes: Int
+  totalLessons: Int
+  totalQuizzes: Int
+  totalAssignments: Int
+  progressPercentage: Float!
+  startedAt: String!
+  completed: Boolean
+  completedAt: String
+  averageCompletionTime: Float
+  averageScore: Float
+  createdAt: String!
+  updatedAt: String!
+}
+
+enum CourseStatus {
+  PUBLISHED
+  DRAFT
+  IN_PAUSE
+}
+
+input CreateCertificateInput {
+  userId: String!
+  courseId: String!
+  certificateTemplateId: String!
+}
+
+input CreateCompanyInput {
+  name: String!
+  email: String!
+  address: String!
+  taxId: String
+  taxName: String
+  isActive: Boolean
+}
+
+input CreateCourseBundleInput {
+  title: String!
+  description: String!
+  featuredImage: String!
+  price: Float!
+  subtotalRegularPrice: Float
+  discountType: DiscountType
+  discountValue: Float
+  courseIds: [ID!]!
+}
+
+input CreateCourseInput {
+  title: String!
+  description: String
+  instructorIds: [ID!]!
+  price: Float!
+  levelId: ID
+  duration: Int!
+  requirements: String
+  status: String!
+  categoryId: ID
+  featuredImage: String
+  metadata: CourseMetadataInput
+  previews: VideoInput
+}
+
+input CreateInitialCourseInput {
+  title: String!
+  levelId: ID
+  status: String!
+  categoryId: ID
+}
+
+input CreateLearningPathInput {
+  name: String!
+  description: String!
+  featuredImage: String
+  courseIds: [ID!]
+}
+
+input CreateLessonInput {
+  topicId: ID!
+  title: String!
+  content: String!
+  position: Int!
+  featuredImage: String
+  attachments: [String!]
+  video: VideoInput
+  showPreview: Boolean
+}
+
+input CreateLevelOrCategoryInput {
+  name: String!
+  description: String!
+}
+
+input CreateLiveClassInput {
+  instructorId: String!
+  courseId: String!
+  meetingLink: String!
+  startTime: String!
+  endTime: String!
+  description: String
+}
+
+input CreatePracticeBiteInput {
+  lessonId: ID!
+  title: String!
+  description: String
+  position: Int
+  solutionRevealThreshold: Int
+}
+
+input CreatePracticeBiteItemInput {
+  practiceBiteId: ID!
+  type: PracticeBiteItemType!
+  prompt: String!
+  media: String
+  settings: PracticeBiteItemSettingsInput
+  answerExplanation: String
+  position: Int
+}
+
+input CreateQuestionInput {
+  quizID: ID!
+  title: String!
+  type: QuestionType!
+  media: String
+  description: String
+  questionMark: Int
+  questionSettings: QuestionSettingsInput
+  questionOrder: Int
+  answerExplanation: String
+}
+
+input CreateQuizInput {
+  topicID: ID!
+  title: String!
+  content: String
+  timer: Int
+  timeUnit: String
+  position: Int
+  maxAttempts: Int
+  passingGrade: Int
+  createdAt: String
+  updatedAt: String
+}
+
+input CreateReviewInput {
+  courseId: ID!
+  rating: Int!
+  comment: String!
+  likes: Int
+}
+
+input CreateRoleInput {
+  name: String!
+  description: String!
+}
+
+input CreateSubscriptionPlanInput {
+  planName: String!
+  planDescription: String
+  price: Float!
+  duration: Int!
+  categoryId: ID
+}
+
+input CreateTopicInput {
+  title: String!
+  courseID: ID!
+  description: String
+  position: Int
+}
+
+input CreateUserInput {
+  fullName: String
+  email: String!
+  username: String!
+  password: String!
+  role: String
+  companyId: ID
+  token: String
+}
+
+scalar DateTime
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+type Enrollment {
+  id: ID!
+  user: User!
+  course: Course!
+  enrolledAt: String!
+  status: EnrollmentStatus!
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+}
+
+type ExtraSettings {
+  key: String
+  value: String
+}
+
+input ExtraSettingsInput {
+  key: String
+  value: String
+}
+
+type Instructor {
+  id: ID!
+  user: User!
+  courses: [Course!]!
+  assignedAt: String
+  role: String
+  isActive: Boolean
+}
+
+input InviteAdminsInput {
+  companyId: ID!
+  emails: [String!]!
+  mode: String!
+}
+
+type InviteAdminsResult {
+  companyId: ID!
+  invited: Int!
+  skipped: Int!
+  errors: [String!]!
+  invites: [AdminInvite!]!
+}
+
+type InviteData {
+  email: String
+  companyName: String
+  invitedBy: String
+  planName: String
+}
+
+input InviteEmployeesInput {
+  companySubscriptionId: ID
+  emails: [String!]!
+}
+
+type InviteEmployeesResult {
+  companySubscriptionId: ID!
+  invited: Int!
+  skipped: Int!
+  errors: [String!]!
+  invites: [InviteSummary!]!
+}
+
+type InviteExpiredAndRenewed {
+  oldInviteId: ID!
+  newInvite: AdminInvite!
+}
+
+type InviteNotActiveError {
+  message: String!
+}
+
+type InviteNotFoundError {
+  message: String!
+}
+
+type InviteSummary {
+  email: String!
+  codeId: ID!
+  status: String!
+}
+
+enum ItemType {
+  COURSE
+  BUNDLE
+  SUBSCRIPTION
+}
+
+type LearningPath {
+  id: ID!
+  name: String!
+  description: String!
+  featuredImage: String
+  courses: [LearningPathCourse!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+type LearningPathCourse {
+  course: Course!
+  position: Int!
+}
+
+type Lesson {
+  id: ID!
+  topic: Topic
+  title: String!
+  content: String
+  position: Int
+  createdAt: String!
+  updatedAt: String!
+  featuredImage: String
+  attachments: [String!]
+  showPreview: Boolean
+  video: Video
+  progress: LessonProgress
+  practiceBites: [PracticeBite!]
+}
+
+type LessonProgress {
+  id: ID!
+  user: User!
+  lesson: Lesson!
+  completed: Boolean!
+  startedAt: String
+  completedAt: String
+  createdAt: String
+  updatedAt: String
+}
+
+type Level {
+  id: ID!
+  name: String!
+  slug: String
+  description: String
+  coursesCount: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
+type LiveClass {
+  id: ID!
+  instructor: Instructor!
+  course: Course!
+  meetingLink: String!
+  startTime: String!
+  endTime: String!
+  description: String
+}
+
+input Login {
+  username: String
+  email: String
+  password: String!
+}
+
+input MarkLessonCompletedInput {
+  lessonId: ID!
+}
+
+type MatchingColumn {
+  items: [String!]!
+}
+
+type MatchingRow {
+  columns: [String!]!
+}
+
+input MatchingRowInput {
+  columns: [String!]!
+}
+
+type MatrixMatch {
+  columnA: String!
+  columnB: String!
+}
+
+input MatrixMatchInput {
+  columnA: String!
+  columnB: String!
+}
+
+type Me {
+  customerId: ID!
+  fullName: String!
+  userName: String!
+  email: String!
+  role: String
+  authProvider: String
+  socialId: String
+  phoneNumber: String
+  isVerified: Boolean
+  profilePicture: String
+  isActive: Boolean
+  stripeId: String
+  major: String
+  occupation: String
+  interests: [String]
+  carts: Cart!
+  subscription: UserSubscription
+  courses: [Course]!
+  bundles: [CourseBundle!]
+  company: Company
+  createdAt: String
+  updatedAt: String
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): String!
+  updateUser(id: ID!, input: UpdateUserInput!): User!
+  updateUserProfile(input: UpdateUserProfileInput!): UserProfile!
+  updateUserPassword(input: UpdateUserPasswordInput!): Boolean!
+  validateUniqueUser(input: ValidateUniqueUserInput!): Boolean!
+  deleteUser(id: ID!): Boolean
+  login(input: Login!): AuthResult!
+  refreshToken(input: RefreshTokenInput!): String!
+  resetPassword(email: String!): String!
+  changePassword(token: String!, password: String!): String!
+  confirmAccount(token: String!): String!
+  resendConfirmation(identifier: String!): String!
+  logout: Boolean!
+  createRole(input: CreateRoleInput!): Roles!
+  updateRole(id: ID!, input: UpdateRoleInput!): Roles!
+  deleteRole(id: ID!): Boolean
+  createLiveClass(input: CreateLiveClassInput!): LiveClass!
+  updateLiveClass(id: ID!, input: UpdateLiveClassInput!): LiveClass!
+  deleteLiveClass(id: ID!): Boolean
+  createLevel(input: CreateLevelOrCategoryInput!): Level!
+  updateLevel(id: ID!, input: UpdateLevelOrCategoryInput!): Level!
+  deleteLevel(id: ID!): Boolean
+  createCategory(input: CreateLevelOrCategoryInput!): Category!
+  updateCategory(id: ID!, input: UpdateLevelOrCategoryInput!): Category!
+  deleteCategory(id: ID!): Boolean
+  createInitialCourse(input: CreateInitialCourseInput!): Course!
+  updateCourse(id: ID!, input: UpdateCourseInput): Course!
+  deleteCourse(id: ID!): Boolean
+  createTopic(input: CreateTopicInput!): Topic!
+  updateTopic(id: ID!, input: UpdateTopicInput): Topic!
+  deleteTopic(id: ID!): Boolean
+  createLesson(input: CreateLessonInput!): Lesson!
+  updateLesson(id: ID!, input: UpdateLessonInput!): Lesson!
+  deleteLesson(id: ID!): Boolean
+  createQuiz(input: CreateQuizInput!): Quiz!
+  updateQuiz(id: ID!, input: UpdateQuizInput): Quiz!
+  deleteQuiz(id: ID!): Boolean
+  createQuestion(input: CreateQuestionInput!): Question!
+  updateQuestion(id: ID!, input: UpdateQuestionInput!): Question!
+  deleteQuestion(id: ID!): Boolean
+  createPracticeBite(input: CreatePracticeBiteInput!): PracticeBite!
+  updatePracticeBite(id: ID!, input: UpdatePracticeBiteInput!): PracticeBite!
+  deletePracticeBite(id: ID!): Boolean
+  createPracticeBiteItem(input: CreatePracticeBiteItemInput!): PracticeBiteItem!
+  updatePracticeBiteItem(id: ID!, input: UpdatePracticeBiteItemInput!): PracticeBiteItem!
+  deletePracticeBiteItem(id: ID!): Boolean
+  submitPracticeBite(input: SubmitPracticeBiteInput!): PracticeBiteSubmissionResult!
+  assignInstructor(userId: ID!, courseId: ID!): Instructor!
+  unassignInstructor(userId: ID!, courseId: ID!): Boolean!
+  createCompany(input: CreateCompanyInput): Company!
+  updateCompany(companyId: ID!, input: UpdateCompanyInput): Company!
+  deleteCompany(companyId: ID!): Boolean
+  createSubscriptionCheckout(planId: ID!): CheckoutSession!
+  requestSubscriptionCodes(planId: ID!, companyId: ID!, quantity: Int!): CompanySubscription!
+  payCompanySubscription(companySubscriptionId: ID!, paymentMethodId: String): PayCompanySubscriptionResult!
+  assignSubscriptionCode(codeId: ID!, email: String!): SubscriptionCode!
+  createBulkSubscriptionCodes(planId: ID!, companyId: ID, quantity: Int!, recurring: Boolean!): [SubscriptionCode!]!
+  activateSubscription(code: String!): UserSubscription!
+  activateCompanySubscription(token: String!): UserSubscription!
+  toggleSubscriptionStatus(userID: ID!, subscriptionId: ID!, isActive: Boolean!): UserSubscription!
+  inviteEmployees(input: InviteEmployeesInput!): InviteEmployeesResult!
+  inviteAdmins(input: InviteAdminsInput!): InviteAdminsResult!
+  resendInvite(companySubscriptionId: ID!, email: String!): Boolean!
+  resendAdminInvite(inviteId: ID!): ResendAdminInviteResult!
+  createEnrollment(userId: ID!, courseId: ID!): Enrollment!
+  updateEnrollmentStatus(enrollmentId: ID!, status: String!): Enrollment!
+  deleteEnrollment(enrollmentId: ID!): Boolean
+  createCourseBundle(input: CreateCourseBundleInput!): CourseBundle!
+  updateCourseBundle(input: UpdateCourseBundleInput!): CourseBundle!
+  deleteCourseBundle(id: ID!): Boolean!
+  createCertificate(input: CreateCertificateInput!): Certificate!
+  updateCertificate(input: UpdateCertificateInput!): Certificate!
+  deleteCertificate(id: ID!): Boolean
+  createCertificateTemplate(input: CertificateTemplateInput!): CertificateTemplate!
+  updateCertificateTemplate(id: ID!, input: UpdateCertificateTemplateInput!): CertificateTemplate!
+  deleteCertificateTemplate(id: ID!): Boolean
+  createSubscriptionPlan(input: CreateSubscriptionPlanInput!): SubscriptionPlan!
+  updateSubscriptionPlan(input: UpdateSubscriptionPlanInput!): SubscriptionPlan!
+  deleteSubscriptionPlan(id: ID!): Boolean!
+  subscribeUser(input: SubscribeUserInput!): UserSubscription!
+  cancelUserSubscription(subscriptionId: ID!): Boolean!
+  markLessonCompleted(input: MarkLessonCompletedInput!): LessonProgress
+  revertLessonProgress(lessonId: ID!): Boolean!
+  submitQuizAttempt(input: SubmitQuizAttemptInput!): QuizAttemptResult
+  updateQuizProgress(input: QuizProgressInput!): QuizProgress
+  updateCourseProgress(input: UpdateCourseProgressInput!): CourseProgress
+  startCourseProgress(input: StartCourseProgressInput!): CourseProgress
+  addToCart(input: AddToCartInput!): Cart!
+  removeFromCart(itemId: ID!): Cart!
+  checkout(cartId: ID!): CheckoutSession!
+  createLearningPath(input: CreateLearningPathInput!): LearningPath!
+  updateLearningPath(learningPathId: ID!, input: UpdateLearningPathInput!): LearningPath!
+  deleteLearningPath(learningPathId: ID!): LearningPath!
+  setCoursePrerequisites(input: SetCoursePrerequisitesInput!): Course!
+  createReview(input: CreateReviewInput!): Review!
+  updateReview(id: ID!, input: UpdateReviewInput): Review!
+  deleteReview(id: ID!): Boolean!
+}
+
+type Order {
+  id: ID!
+  status: String!
+  amount: Float!
+  refundedAmount: Float!
+  refundedAt: String
+  currency: String!
+  cardBrand: String
+  cardLast4: String
+  receiptUrl: String
+  createdAt: String!
+  items: [OrderItem!]!
+  voucherUrl: String
+  voucherReference: String
+  voucherExpiresAt: String
+}
+
+type OrderItem {
+  itemType: String!
+  itemId: ID!
+  quantity: Int!
+  unitPrice: Float!
+  title: String
+  featuredImage: String
+}
+
+type OrderStatus {
+  status: String!
+  amount: Float!
+  currency: String!
+  items: [OrderItem!]!
+}
+
+type PageInfo {
+  page: Int!
+  limit: Int!
+  offset: Int!
+  hasNextPage: Boolean!
+}
+
+type PaginatedBundle {
+  totalCount: Int
+  pageInfo: PageInfo!
+  bundle: [CourseBundle!]!
+}
+
+type PaginatedCourse {
+  totalCount: Int
+  pageInfo: PageInfo!
+  course: [Course!]!
+}
+
+union PayCompanySubscriptionResult = CompanySubscription | SetupIntentRequired
+
+type PracticeBite {
+  id: ID!
+  lesson: Lesson!
+  title: String!
+  description: String
+  position: Int
+  solutionRevealThreshold: Int!
+  items: [PracticeBiteItem!]
+  progress: PracticeBiteProgress
+  createdAt: String!
+  updatedAt: String!
+}
+
+type PracticeBiteItem {
+  id: ID!
+  practiceBite: PracticeBite
+  type: PracticeBiteItemType!
+  prompt: String!
+  media: String
+  settings: PracticeBiteItemSettings
+  solution: PracticeBiteItemSettings
+  answerExplanation: String
+  position: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+
+input PracticeBiteItemAnswerInput {
+  itemId: ID!
+  selectedOptions: [String!]
+  booleanAnswer: Boolean
+  textAnswer: String
+  matchingRows: [MatchingRowInput!]
+}
+
+type PracticeBiteItemResult {
+  itemId: ID!
+  correct: Boolean!
+  feedback: String!
+  answerExplanation: String
+  solutionRevealed: Boolean!
+  solution: PracticeBiteItemSettings
+}
+
+type PracticeBiteItemSettings {
+  matchingRows: [MatchingRow!]
+  matchingColumns: [MatchingColumn!]
+  correctBoolean: Boolean
+  acceptedAnswers: [String!]
+  caseSensitive: Boolean
+  options: [String!]
+  blanks: [String!]
+}
+
+input PracticeBiteItemSettingsInput {
+  matchingRows: [MatchingRowInput!]
+  correctBoolean: Boolean
+  acceptedAnswers: [String!]
+  caseSensitive: Boolean
+  options: [String!]
+  blanks: [String!]
+}
+
+enum PracticeBiteItemType {
+  MATCHING_4_COLUMN
+  TRUE_FALSE
+  IMAGE_SHORT_PHRASE
+  FILL_IN_THE_BLANKS
+}
+
+type PracticeBiteProgress {
+  id: ID!
+  user: User!
+  practiceBite: PracticeBite!
+  completed: Boolean!
+  attempts: Int!
+  lastScore: Float
+  startedAt: String!
+  completedAt: String
+}
+
+type PracticeBiteSubmissionResult {
+  practiceBiteId: ID!
+  completed: Boolean!
+  score: Float!
+  correctCount: Int!
+  totalCount: Int!
+  attempts: Int!
+  isPerfect: Boolean!
+  isFirstAttempt: Boolean!
+  message: String!
+  itemResults: [PracticeBiteItemResult!]!
+}
+
+enum PricingType {
+  FREE
+  PAID
+  CUSTOM
+}
+
+type Query {
+  getUser(id: ID!): User
+  getUsers: [User]
+  internalUsers: [User!]!
+  listRoles: [Roles]
+  getRole(id: ID!): Roles
+  me: Me
+  getProfile: Me
+  getLevels: [Level!]!
+  getLevel(id: ID): Level
+  getCategories: [Category!]!
+  getCategory(id: ID): Category
+  instructors: [Instructor!]!
+  coursesForInstructor(userId: ID!): [Course!]!
+  courses(search: String, sortBy: String, sortOrder: String, page: Int = 1, limit: Int = 10, categoryIds: [ID!], levelIds: [ID!], durations: [String!], maxPrice: Int): PaginatedCourse!
+  course(id: ID!): Course!
+  courseBySlug(slug: String!): Course!
+  instructorCourses(search: String, sortBy: String, sortOrder: String, page: Int = 1, limit: Int = 10): PaginatedCourse!
+  courseIntroVideo(courseId: ID!): Video
+  companies: [Company!]!
+  company(id: ID!): Company!
+  companyAdmins(companyId: ID!): [User!]!
+  companyUsers(companyId: ID!): [User!]!
+  companyCourses(companyId: ID!, filter: CompanyCoursesFilter): [Course!]!
+  companyCourseProgress(companyId: ID!, filter: CompanyCourseProgressFilter): [CompanyCourseProgressRow!]!
+  companyCourseProgressSummary(companyId: ID!, filter: CompanyCourseProgressFilter): [CompanyCourseProgressSummary!]!
+  companyTeamStats(companyId: ID!): CompanyTeamStats!
+  companyTeamMembers(companyId: ID!, filter: TeamMembersFilter): TeamMembersResult!
+  topics: [Topic!]!
+  topicsByCourseId(courseId: ID!): [Topic!]!
+  topic(id: ID!): Topic!
+  lessons: [Lesson!]!
+  lessonsByTopicId(topicId: ID!): [Lesson!]!
+  lesson(id: ID!): Lesson!
+  quizzes: [Quiz!]!
+  quizzesByTopicId(topicId: ID!): [Quiz!]!
+  quiz(id: ID!): Quiz!
+  questions: [Question!]!
+  questionsByQuizId(quizId: ID!): [Question!]!
+  question(id: ID!): Question!
+  practiceBitesByLessonId(lessonId: ID!): [PracticeBite!]!
+  practiceBite(id: ID!): PracticeBite!
+  getEnrollments: [Enrollment!]
+  getEnrollmentById(enrollmentId: ID!): Enrollment
+  getUserEnrollments: [Enrollment!]
+  getCourseEnrollments(courseId: ID!): [Enrollment!]
+  getCertificates: [Certificate!]
+  getCertificateById(id: ID!): Certificate
+  getCertificatesByUser(userId: ID!): [Certificate!]
+  getCertificatesByCourse(courseId: ID!): [Certificate!]
+  getCertificateTemplates: [CertificateTemplate!]
+  getCertificateTemplateById(id: ID!): CertificateTemplate
+  getCertificateTemplatesByCourse(courseId: ID!): [CertificateTemplate!]
+  getLessonProgress(lessonId: ID!): LessonProgress
+  getQuizProgress(quizId: ID!): QuizProgress
+  getPracticeBiteProgress(practiceBiteId: ID!): PracticeBiteProgress
+  getCourseProgress(userId: ID!, courseId: ID!): CourseProgress
+  subscriptionPlans: [SubscriptionPlan!]!
+  userSubscriptions(userId: ID!): [UserSubscription!]!
+  companySubscriptions(companyId: ID!): [CompanySubscription!]!
+  subscriptionReport(companyId: ID!, companySubscriptionId: String!): SubscriptionReport!
+  activeUserSubscription(userId: ID!): UserSubscription
+  companyInvites(companySubscriptionId: ID!): [CompanyInvite!]!
+  companyAdminInvites(companyId: ID!): [AdminInvite!]!
+  validateInviteToken(token: String!): ValidateInviteTokenResult!
+  checkUserExists(email: String!): UserExistsResult!
+  bundles(search: String, sortBy: String, sortOrder: String, page: Int = 1, limit: Int = 10): PaginatedBundle!
+  bundle(id: ID!): CourseBundle!
+  instructorBundles(search: String, sortBy: String, sortOrder: String, page: Int = 1, limit: Int = 10): PaginatedBundle!
+  cart: Cart
+  orderStatus(sessionId: ID!): OrderStatus
+  learningPaths: [LearningPath!]!
+  learningPath(id: ID!): LearningPath!
+  reviews: [Review!]!
+  review(id: ID!): Review!
+  myQuizAttempts: [QuizAttempts!]!
+  quizForAttempt(quizId: ID!): AttemptQuiz
+  myOrders: [Order!]!
+  myCertificates: [Certificate!]!
+}
+
+type Question {
+  id: ID!
+  quiz: Quiz
+  title: String!
+  description: String
+  media: String
+  type: QuestionType!
+  mark: Float!
+  settings: QuestionSettings
+  order: Int!
+  answerExplanation: String
+  answers: [Answer!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+type QuestionSettings {
+  questionMark: Int
+  questionType: QuestionType
+  answerRequired: Boolean
+  showQuestionMark: Boolean
+  randomizeQuestion: Boolean
+  sortableItems: [String!]
+  correctAnswers: [String!]
+  matrixMatches: [MatrixMatch!]
+}
+
+input QuestionSettingsInput {
+  questionMark: Int
+  questionType: QuestionType
+  answerRequired: Boolean
+  showQuestionMark: Boolean
+  randomizeQuestion: Boolean
+  sortableItems: [String!]
+  correctAnswers: [String!]
+  matrixMatches: [MatrixMatchInput!]
+}
+
+enum QuestionType {
+  TRUE_FALSE
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  FREE_CHOICE
+  MATRIX_SORTING
+  SORTING
+  FILL_IN_THE_BLANKS
+  ASSESSMENT
+  ESSAY
+}
+
+type Quiz {
+  id: ID!
+  topic: Topic!
+  title: String!
+  content: String
+  timer: Int
+  timeUnit: String
+  position: Int
+  maxAttempts: Int
+  passingGrade: Int!
+  questions: [Question!]
+  progress: QuizProgress
+  createdAt: String!
+  updatedAt: String!
+}
+
+input QuizAnswerInput {
+  questionId: ID!
+  selected: [String!]
+  pairs: [QuizAnswerPairInput!]
+}
+
+input QuizAnswerPairInput {
+  left: String!
+  right: String!
+}
+
+type QuizAttemptResult {
+  attemptId: ID!
+  earnedMarks: Float!
+  possibleMarks: Float!
+  percentage: Float!
+  passed: Boolean!
+  passingGrade: Int!
+  correctCount: Int!
+  gradedCount: Int!
+  excludedCount: Int!
+  attemptsUsed: Int!
+  attemptsLeft: Int
+  questionResults: [QuizQuestionResult!]!
+}
+
+type QuizAttempts {
+  id: ID!
+  user: User!
+  quiz: Quiz!
+  score: Float!
+  attemptDate: String
+}
+
+type QuizProgress {
+  id: ID!
+  user: User!
+  quiz: Quiz!
+  score: Float!
+  completed: Boolean!
+  startedAt: String!
+  completedAt: String
+}
+
+input QuizProgressInput {
+  quizId: ID!
+  score: Float
+  completed: Boolean
+  completedAt: String
+  startedAt: String
+}
+
+type QuizQuestionResult {
+  questionId: ID!
+  correct: Boolean!
+  excluded: Boolean!
+  markEarned: Float!
+  markPossible: Float!
+  answerExplanation: String
+}
+
+input RefreshTokenInput {
+  token: String!
+}
+
+union ResendAdminInviteResult = AdminInvite | InviteNotFoundError | InviteExpiredAndRenewed | InviteNotActiveError
+
+type Review {
+  id: ID!
+  comment: String!
+  rating: Int!
+  course: Course
+  user: User
+  likes: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Roles {
+  id: ID!
+  name: String!
+  description: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input SetCoursePrerequisitesInput {
+  courseId: ID!
+  requiredCourseIds: [ID!]!
+}
+
+type SetupIntentRequired {
+  clientSecret: String!
+}
+
+input StartCourseProgressInput {
+  courseId: ID!
+}
+
+input SubmitPracticeBiteInput {
+  practiceBiteId: ID!
+  answers: [PracticeBiteItemAnswerInput!]!
+}
+
+input SubmitQuizAttemptInput {
+  quizId: ID!
+  answers: [QuizAnswerInput!]!
+}
+
+input SubscribeUserInput {
+  userId: ID!
+  planId: ID!
+  startDate: String!
+}
+
+type SubscriptionCode {
+  id: ID!
+  code: String!
+  plan: SubscriptionPlan!
+  company: Company
+  companySubscription: CompanySubscription
+  stripeSubscriptionId: String
+  status: String!
+  isRedeemed: Boolean!
+  redeemedBy: User
+  createdAt: String!
+  expiresAt: String
+}
+
+type SubscriptionPlan {
+  id: ID!
+  planName: String!
+  planDescription: String
+  price: Float!
+  duration: Int!
+  category: Category
+  stripePricePlanID: String!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type SubscriptionReport {
+  companySubscriptionId: String!
+  totalSubscriptions: Int!
+  redeemedSubscriptions: Int!
+  unredeemedSubscriptions: Int!
+  activeSubscriptions: Int!
+}
+
+type TeamMember {
+  id: ID!
+  fullName: String!
+  email: String!
+  role: String
+  occupation: String
+  profilePicture: String
+  isActive: Boolean
+  coursesInProgress: Int!
+  coursesCompleted: Int!
+  certificatesEarned: Int!
+  avgProgress: Float!
+  lastActivityAt: String
+}
+
+input TeamMembersFilter {
+  search: String
+  isActive: Boolean
+  limit: Int = 20
+  offset: Int = 0
+}
+
+type TeamMembersResult {
+  members: [TeamMember!]!
+  total: Int!
+}
+
+type Topic {
+  id: ID!
+  course: Course!
+  title: String
+  description: String
+  position: Int
+  lessons: [Lesson!]
+  quizzes: [Quiz!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+input UpdateCertificateInput {
+  id: ID!
+  certificateTemplateId: String
+  issuedAt: String
+}
+
+input UpdateCertificateTemplateInput {
+  name: String
+  content: String
+  logoUrl: String
+  background: String
+}
+
+input UpdateCompanyInput {
+  name: String
+  email: String
+  address: String
+  taxId: String
+  taxName: String
+  isActive: Boolean
+  logo: String
+  icon: String
+}
+
+input UpdateCourseBundleInput {
+  id: ID!
+  title: String
+  description: String
+  featuredImage: String
+  price: Float
+  subtotalRegularPrice: Float
+  discountType: DiscountType
+  discountValue: Float
+  courseIds: [ID!]
+}
+
+input UpdateCourseInput {
+  title: String!
+  shortDescription: String
+  description: String
+  featuredImage: String
+  video: VideoInput
+  tags: [String!]
+  price: Float
+  discountedPrice: Float
+  promotionDuration: Int
+  levelId: ID
+  categoryId: ID
+  duration: Int
+  requirements: String
+  metadata: CourseMetadataInput
+  status: CourseStatus
+  pricingType: PricingType
+  creatorId: ID
+  maxEnrollments: Int
+  extraSettings: [ExtraSettingsInput!]
+  visibility: Visibility
+  scheduledPublishAt: DateTime
+}
+
+input UpdateCourseProgressInput {
+  userId: ID!
+  courseId: ID!
+  completedLessons: Int
+  completedQuizzes: Int
+  progressPercentage: Float
+  completed: Boolean
+  completedAt: String
+  averageCompletionTime: Float
+  averageScore: Float
+}
+
+input UpdateLearningPathInput {
+  name: String
+  description: String
+  featuredImage: String
+  courseIds: [ID!]
+}
+
+input UpdateLessonInput {
+  title: String
+  content: String
+  position: Int
+  featuredImage: String
+  attachments: [String!]
+  video: VideoInput
+  showPreview: Boolean
+}
+
+input UpdateLevelOrCategoryInput {
+  name: String!
+  description: String!
+  updatedAt: String
+}
+
+input UpdateLiveClassInput {
+  instructorId: String
+  courseId: String
+  meetingLink: String
+  startTime: String
+  endTime: String
+  description: String
+}
+
+input UpdatePracticeBiteInput {
+  title: String
+  description: String
+  position: Int
+  solutionRevealThreshold: Int
+}
+
+input UpdatePracticeBiteItemInput {
+  type: PracticeBiteItemType
+  prompt: String
+  media: String
+  settings: PracticeBiteItemSettingsInput
+  answerExplanation: String
+  position: Int
+}
+
+input UpdateQuestionInput {
+  title: String
+  type: QuestionType
+  description: String
+  media: String
+  questionMark: Int
+  questionSettings: QuestionSettingsInput
+  questionOrder: Int
+  answerExplanation: String
+  answers: [AnswerInput]
+}
+
+input UpdateQuizInput {
+  title: String
+  content: String
+  timer: Int
+  timeUnit: String
+  position: Int
+  maxAttempts: Int
+  passingGrade: Int
+  updatedAt: String
+}
+
+input UpdateReviewInput {
+  rating: Int
+  comment: String
+  likes: Int
+}
+
+input UpdateRoleInput {
+  name: String
+  description: String
+}
+
+input UpdateSubscriptionPlanInput {
+  id: ID!
+  planName: String
+  planDescription: String
+  price: Float
+  duration: Int
+  categoryId: ID
+}
+
+input UpdateTopicInput {
+  title: String
+  description: String
+  position: Int
+}
+
+input UpdateUserInput {
+  fullName: String
+  email: String
+  phoneNumber: String
+  profilePicture: String
+  role: String
+}
+
+input UpdateUserPasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input UpdateUserProfileInput {
+  fullName: String
+  userName: String
+  email: String
+  phoneNumber: String
+  profilePicture: String
+  major: String
+  occupation: String
+  interests: [String]
+}
+
+type User {
+  id: ID!
+  fullName: String!
+  userName: String!
+  email: String!
+  role: String
+  authProvider: String
+  socialId: String
+  phoneNumber: String
+  isVerified: Boolean
+  profilePicture: String
+  isActive: Boolean
+  stripeId: String
+  occupation: String
+  company: Company
+  major: String
+  interests: [String]
+  createdAt: String!
+  updatedAt: String!
+}
+
+type UserCategoryAccess {
+  id: ID!
+  user: User!
+  category: Category!
+  startDate: String!
+  endDate: String
+  status: String
+}
+
+type UserExistsResult {
+  exists: Boolean!
+  userId: ID
+}
+
+type UserProfile {
+  id: ID!
+  fullName: String
+  userName: String
+  email: String
+  phoneNumber: String
+  profilePicture: String
+  major: String
+  occupation: String
+  interests: [String]
+}
+
+type UserSubscription {
+  id: ID!
+  user: User!
+  plan: SubscriptionPlan!
+  company: Company
+  companySubscription: CompanySubscription
+  stripeSubscriptionId: String!
+  startDate: String!
+  endDate: String!
+  isActive: Boolean!
+  cancelAtPeriodEnd: Boolean
+}
+
+type ValidateInviteTokenResult {
+  valid: Boolean!
+  expired: Boolean
+  used: Boolean
+  data: InviteData
+}
+
+input ValidateUniqueUserInput {
+  username: String
+  email: String
+}
+
+type Video {
+  id: ID!
+  videoURL: String
+  source: String
+  type: String
+  duration: Int
+  description: String
+  tags: [String!]
+  width: Int
+  height: Int
+  format: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+input VideoInput {
+  videoURL: String
+  source: String
+  type: String
+  duration: Int
+  description: String
+  tags: [String!]
+  width: Int
+  height: Int
+  format: String
+}
+
+enum Visibility {
+  PUBLIC
+  PASSWORD_PROTECTED
+  PRIVATE
+}

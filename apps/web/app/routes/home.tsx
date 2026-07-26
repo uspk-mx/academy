@@ -1,16 +1,35 @@
-import { Button } from "@workspace/ui/components/button"
+import { loadCtaBanner } from "@academy/cms/loaders/cta-banner"
+import { loadHomePage } from "@academy/cms/loaders/home"
+import { HomePage } from "@academy/user-ui/components/pages/home-page"
+import type { Route } from "./+types/home"
 
-export default function Home() {
+export async function loader({ params }: Route.LoaderArgs) {
+  const lang = params.lang
+  const [home, ctaBanner] = await Promise.all([
+    loadHomePage({ lang }),
+    loadCtaBanner({ lang }),
+  ])
+
+  if (!home) {
+    throw new Response("Not Found", { status: 404 })
+  }
+
+  return { ...home, ctaBanner }
+}
+
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { hero, features, pricing, logoStrip, testimonial, showTestimonialsSection } = loaderData
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-      </div>
-    </div>
+    <HomePage
+      hero={hero}
+      features={features}
+      pricing={pricing}
+      logoStrip={logoStrip}
+      testimonial={{
+        ...testimonial,
+        showTestimonialsSection,
+      }}
+    />
   )
 }

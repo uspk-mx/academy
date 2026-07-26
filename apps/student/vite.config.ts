@@ -24,6 +24,15 @@ export default defineConfig(({ mode }) => {
         "domutils",
         "domelementtype",
         "entities",
+        // sanitize-html's own deps — bundle them too, or they're require()'d from
+        // node_modules at runtime and Vercel's function may not include them
+        // (escape-string-regexp v5 is ESM-only → "Cannot find module").
+        "deepmerge",
+        "escape-string-regexp",
+        "is-plain-object",
+        "parse-srcset",
+        "postcss",
+        "launder",
       ],
     },
     server: {

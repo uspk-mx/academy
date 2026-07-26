@@ -16,7 +16,7 @@
   },
   "packageManager": "bun@1.2.11",
   "engines": {
-    "node": "22.x"
+    "node": ">=20"
   },
   "workspaces": [
     "apps/*",

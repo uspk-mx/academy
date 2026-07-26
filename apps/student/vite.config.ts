@@ -11,7 +11,20 @@ export default defineConfig(({ mode }) => {
       tsconfigPaths: true,
     },
     ssr: {
-      noExternal: ["posthog-js", "@posthog/react"],
+      noExternal: [
+        "posthog-js",
+        "@posthog/react",
+        // sanitize-html (CJS) requires htmlparser2 v12, which is ESM-only, so a
+        // runtime require() crashes on Vercel's Node (ERR_REQUIRE_ESM). Bundle
+        // the whole family into the SSR build so the interop is resolved at
+        // build time instead of require()'d at runtime.
+        "sanitize-html",
+        "htmlparser2",
+        "domhandler",
+        "domutils",
+        "domelementtype",
+        "entities",
+      ],
     },
     server: {
       proxy: {

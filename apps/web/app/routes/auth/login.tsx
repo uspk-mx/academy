@@ -4,29 +4,14 @@ import {
   resendConfirmationMutation,
 } from "@academy/courses-api/graphql/mutations/auth"
 import { LoginPage } from "@academy/user-ui/components/pages/auth/login"
-import { safeReturnTo } from "@academy/user-ui/lib/site-urls"
 import type { LoginActionData, LoginInput } from "@academy/user-ui/types/auth"
 import { redirect, useNavigation } from "react-router"
-import { isSupportedLang } from "../../../lib/lang"
+import { postAuthTarget, redirectIfAuthenticated } from "../../lib/auth"
 import type { Route } from "./+types/login"
 import type { PostHogContext } from "../../lib/posthog-middleware"
 
-/**
- * Post-login destination from `?redirect=`. Accepts lang-prefixed paths
- * ("/en/courses/x"), lang-less ones ("/cart"), and absolute URLs on an
- * allowlisted origin — the student app on app.uspkacademy.com sends users here
- * to authenticate and needs them back. Anything else falls back to home.
- */
-function postLoginTarget(request: Request, lang: string): string {
-  const raw = new URL(request.url).searchParams.get("redirect")
-  const target = safeReturnTo(raw, `/${lang}`)
-  // Absolute (cross-origin) targets are already complete.
-  if (/^https?:\/\//i.test(target)) return target
-  const firstSegment = target.split("/").filter(Boolean)[0]
-  return isSupportedLang(firstSegment) ? target : `/${lang}${target}`
-}
-
-export async function loader({ params: { lang } }: Route.LoaderArgs) {
+export async function loader({ request, params: { lang } }: Route.LoaderArgs) {
+  await redirectIfAuthenticated(request, lang)
   const labels = await loadAuthLabels(lang)
   return { labels }
 }
@@ -83,7 +68,7 @@ export async function action({
 
     const headers = new Headers()
     for (const cookie of setCookies) headers.append("Set-Cookie", cookie)
-    return redirect(postLoginTarget(request, params.lang), { headers })
+    return redirect(postAuthTarget(request, params.lang), { headers })
   } catch (error: any) {
     // The API blocks unconfirmed accounts with a specific message; surface the
     // resend affordance instead of a generic error.

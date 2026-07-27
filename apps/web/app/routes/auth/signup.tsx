@@ -6,10 +6,12 @@ import {
 import { SignupPage } from "@academy/user-ui/components/pages/auth/signup"
 import type { SignupActionData } from "@academy/user-ui/types/auth"
 import { data, useNavigation } from "react-router"
+import { redirectIfAuthenticated } from "../../lib/auth"
 import type { Route } from "./+types/signup"
 import type { PostHogContext } from "../../lib/posthog-middleware"
 
-export async function loader({ params: { lang } }: Route.LoaderArgs) {
+export async function loader({ request, params: { lang } }: Route.LoaderArgs) {
+  await redirectIfAuthenticated(request, lang)
   const labels = await loadAuthLabels(lang)
   return { labels }
 }

@@ -167,10 +167,6 @@ export function LoginPage({
           >
             <GoogleIcon /> Google
           </SocialButton>
-          {/* TODO(auth): Microsoft OAuth not wired on the API yet. */}
-          <SocialButton onClick={() => console.log("oauth microsoft")}>
-            <MicrosoftIcon /> Microsoft
-          </SocialButton>
         </div>
 
         <p className="text-center text-sm text-content-muted">

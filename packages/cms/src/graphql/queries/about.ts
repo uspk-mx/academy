@@ -26,13 +26,7 @@ const ABOUT_PAGE_QUERY = graphql(`
       body
       audienceTitle
       audienceDescription
-      audienceCards {
-        id
-        title
-        tone
-        order
-        description
-      }
+      audienceCardsJson
       image {
         id
         size

@@ -6,6 +6,11 @@ import {
 } from "@academy/user-ui/types/cms"
 import { getAboutPage } from "../graphql/queries/about"
 import { loadCtaBanner } from "./cta-banner"
+import {
+  audienceCardsJsonSchema,
+  jsonItemId,
+  parseJsonField,
+} from "./json-fields"
 
 export interface AboutPageData {
   content: AboutContent
@@ -22,6 +27,11 @@ export async function loadAboutPage(lang: string): Promise<AboutPageData> {
   ])
 
   const about = aboutPages[0]
+  const audienceCards = parseJsonField(
+    audienceCardsJsonSchema,
+    about.audienceCardsJson,
+    "AboutPage.audienceCardsJson"
+  )
 
   return {
     content: {
@@ -48,7 +58,12 @@ export async function loadAboutPage(lang: string): Promise<AboutPageData> {
       audience: {
         title: about.audienceTitle ?? "",
         description: about.audienceDescription ?? "",
-        segments: about.audienceCards,
+        segments: audienceCards.map((card, index) => ({
+          id: jsonItemId("audience", card, index),
+          title: card.title,
+          description: card.description,
+          tone: card.tone,
+        })),
       },
       team: {
         title: about.teamTitle ?? "",

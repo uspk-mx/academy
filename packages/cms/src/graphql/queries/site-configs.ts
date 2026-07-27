@@ -19,21 +19,8 @@ export const GET_SITE_CONFIGS = graphql(`
       id
       loginHref
       loginLabel
-      navLinks {
-        id
-        label
-        href
-        external
-        order
-      }
-      footerColumns {
-        id
-        linkHrefs
-        linkLabels
-        locale
-        order
-        title
-      }
+      navLinksJson
+      footerColumnsJson
     }
   }
 `)

@@ -1,6 +1,5 @@
 import { getLocale } from "@academy/user-ui/lib/lang"
 import {
-  BrandTone,
   CmsImage,
   FeatureItem,
   FeaturesSectionContent,
@@ -13,6 +12,12 @@ import {
   UnitTeaserContent,
 } from "@academy/user-ui/types/cms"
 import { getHomeData } from "../graphql/queries"
+import {
+  featureCardsJsonSchema,
+  jsonItemId,
+  parseJsonField,
+  pricingPlansJsonSchema,
+} from "./json-fields"
 
 function mapIcon(icon: string): FeatureItem["icon"] {
   return (icon === "bar_chart" ? "bar-chart" : icon) as FeatureItem["icon"]
@@ -38,6 +43,16 @@ export async function loadHomePage({
   })
 
   const h = homePages[0]
+  const featureCards = parseJsonField(
+    featureCardsJsonSchema,
+    h.featureCardsJson,
+    "HomePage.featureCardsJson"
+  )
+  const pricingPlans = parseJsonField(
+    pricingPlansJsonSchema,
+    h.pricingPlansJson,
+    "HomePage.pricingPlansJson"
+  )
 
   return {
     // ── Hero ───────────────────────────────────────────────────────────────
@@ -74,13 +89,13 @@ export async function loadHomePage({
     features: {
       eyebrow: h.featureEyebrow ?? "",
       title: h.featureTitle as unknown as TitleSegment[],
-      items: h.featureCards.map((c: any): FeatureItem => ({
-        id: c.id,
+      items: featureCards.map((c, index): FeatureItem => ({
+        id: jsonItemId("feature", c, index),
         eyebrow: c.eyebrow,
         title: c.title,
         description: c.description,
         icon: mapIcon(c.icon),
-        tone: c.tone as BrandTone,
+        tone: c.tone,
       })),
     },
 
@@ -90,16 +105,16 @@ export async function loadHomePage({
       eyebrow: h.pricingEyebrow ?? "",
       title: h.pricingTitle as unknown as TitleSegment[],
       subtitle: h.pricingSubtitle ?? "",
-      plans: h.pricingPlans.map((p: any): PricingPlanContent => ({
-        id: p.id,
+      plans: pricingPlans.map((p, index): PricingPlanContent => ({
+        id: jsonItemId("pricing", p, index),
         name: p.name,
         price: p.price,
         priceSuffix: p.priceSuffix,
         features: p.features,
         cta: { label: p.ctaLabel, href: p.ctaHref },
-        ctaTone: p.ctaTone,
-        highlighted: p.highlighted,
-        highlightLabel: p.highlightLabel,
+        ctaTone: p.ctaTone ?? undefined,
+        highlighted: p.highlighted ?? undefined,
+        highlightLabel: p.highlightLabel ?? undefined,
       })),
     },
 

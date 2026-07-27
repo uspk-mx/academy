@@ -1,33 +1,24 @@
 import { getLocale } from "@academy/user-ui/lib/lang"
-import {
-  getPrivacyNotice,
-  getTermsAndConditions,
-  PrivacyNoticeData,
-  TermsAndConditionsData,
-} from "../graphql/queries/legal"
+import { getLegalPage, LegalPageData } from "../graphql/queries/legal"
 
-export async function loadPrivacyPage(
-  lang: string
-): Promise<PrivacyNoticeData["privacyNotices"][number]> {
+export type LegalPage = NonNullable<LegalPageData["termsAndCondition"]>
+
+async function loadLegalPage(
+  lang: string,
+  slug: "privacy-notice" | "terms-and-conditions"
+): Promise<LegalPage | null> {
   const locale = getLocale(lang)
-  const { privacyNotices } = await getPrivacyNotice({
-    variables: { locale: locale },
+  const { termsAndCondition } = await getLegalPage({
+    variables: { locale, slug },
   })
 
-  const privacyNotice = privacyNotices[0]
-
-  return privacyNotice
+  return termsAndCondition ?? null
 }
 
-export async function loadTermsPage(
-  lang: string
-): Promise<TermsAndConditionsData["termsAndConditions"][number]> {
-  const locale = getLocale(lang)
-  const { termsAndConditions } = await getTermsAndConditions({
-    variables: { locale: locale },
-  })
+export function loadPrivacyPage(lang: string): Promise<LegalPage | null> {
+  return loadLegalPage(lang, "privacy-notice")
+}
 
-  const terms = termsAndConditions[0]
-
-  return terms
+export function loadTermsPage(lang: string): Promise<LegalPage | null> {
+  return loadLegalPage(lang, "terms-and-conditions")
 }

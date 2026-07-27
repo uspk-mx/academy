@@ -1,9 +1,8 @@
-import { getSiteConfigs } from "@academy/cms/graphql/queries/site-configs"
+import { loadSiteConfig } from "@academy/cms/loaders/site-config"
 import { getCart } from "@academy/courses-api/graphql/queries/cart"
 import { getMe } from "@academy/courses-api/graphql/queries/me"
 import { Header } from "@academy/user-ui/components"
 import { Footer } from "@academy/user-ui/components/shared/footer"
-import { getLocale } from "@academy/user-ui/lib/lang"
 import type { AuthState } from "@academy/user-ui/types/api"
 import { type ReactNode, useEffect, useRef } from "react"
 import { Outlet } from "react-router"
@@ -11,17 +10,9 @@ import type { Route } from "./+types/layout"
 import { usePostHog } from "@posthog/react"
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-  const locales = getLocale(params.lang)
-
-  const [{ siteConfigs }, me, cart] = await Promise.all([
-    getSiteConfigs({
-      variables: { locales: [locales] },
-    }),
-    getMe(request),
-    getCart(request),
-  ])
-
-  const siteConfig = siteConfigs[0]
+  const [{ siteConfig, navLinks, footerColumns }, me, cart] = await Promise.all(
+    [loadSiteConfig({ lang: params.lang }), getMe(request), getCart(request)]
+  )
 
   const user = me?.me
   const auth: AuthState = user
@@ -36,15 +27,9 @@ export async function loader({ params, request }: Route.LoaderArgs) {
       }
     : { status: "anonymous" }
 
-  const navLinks = siteConfig.navLinks.map((item) => ({
-    ...item,
-    external: item.external ?? false,
-    order: item.order ?? 1,
-  }))
-
   return {
     navLinks,
-    footerColumns: siteConfig.footerColumns,
+    footerColumns,
     siteConfig,
     auth,
     cart,
@@ -91,7 +76,13 @@ export default function Layout({
       />
       {children}
       <Outlet />
-      <Footer data={{ ...(siteConfig as any), ...footerColumns }} />
+      <Footer
+        data={{
+          footerTagline: siteConfig.footerTagline ?? "",
+          footerCopyright: siteConfig.footerCopyright ?? "",
+          footerColumns,
+        }}
+      />
     </>
   )
 }

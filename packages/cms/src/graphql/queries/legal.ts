@@ -1,11 +1,12 @@
 import { cmsAPIClient } from "@academy/cms/api-client"
 import { graphql, ResultOf, VariablesOf } from "../graphql"
 
-const TERMS_AND_CONDITIONS_QUERY = graphql(`
-  query TermsAndConditions($locale: Locale!) {
-    termsAndConditions(locales: [$locale]) {
+export const LEGAL_PAGE_QUERY = graphql(`
+  query LegalPage($locale: Locale!, $slug: String!) {
+    termsAndCondition(where: { slug: $slug }, locales: [$locale]) {
       heading
       id
+      slug
       lastUpdated
       lastUpdatedLabel
       updatedAt
@@ -17,44 +18,13 @@ const TERMS_AND_CONDITIONS_QUERY = graphql(`
   }
 `)
 
-export type TermsAndConditionsData = ResultOf<typeof TERMS_AND_CONDITIONS_QUERY>
-export type TermsAndConditionsVariables = VariablesOf<
-  typeof TERMS_AND_CONDITIONS_QUERY
->
+export type LegalPageData = ResultOf<typeof LEGAL_PAGE_QUERY>
+export type LegalPageVariables = VariablesOf<typeof LEGAL_PAGE_QUERY>
 
-export async function getTermsAndConditions({
+export async function getLegalPage({
   variables,
 }: {
-  variables: TermsAndConditionsVariables
-}): Promise<TermsAndConditionsData> {
-  return cmsAPIClient(TERMS_AND_CONDITIONS_QUERY, variables)
-}
-
-const PRIVACY_NOTICE_CONDITIONS_QUERY = graphql(`
-  query PrivacyNotices($locale: Locale!) {
-    privacyNotices(locales: [$locale]) {
-      heading
-      id
-      lastUpdated
-      lastUpdatedLabel
-      updatedAt
-      content {
-        __typename
-        raw
-      }
-    }
-  }
-`)
-
-export type PrivacyNoticeData = ResultOf<typeof PRIVACY_NOTICE_CONDITIONS_QUERY>
-export type PrivacyNoticeVariables = VariablesOf<
-  typeof PRIVACY_NOTICE_CONDITIONS_QUERY
->
-
-export async function getPrivacyNotice({
-  variables,
-}: {
-  variables: PrivacyNoticeVariables
-}): Promise<PrivacyNoticeData> {
-  return cmsAPIClient(PRIVACY_NOTICE_CONDITIONS_QUERY, variables)
+  variables: LegalPageVariables
+}): Promise<LegalPageData> {
+  return cmsAPIClient(LEGAL_PAGE_QUERY, variables)
 }

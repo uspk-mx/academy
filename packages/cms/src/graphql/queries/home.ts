@@ -23,32 +23,8 @@ export const GET_HOME = graphql(`
           url
         }
       }
-      featureCards {
-        createdAt
-        description
-        eyebrow
-        icon
-        id
-        locale
-        order
-        publishedAt
-        stage
-        title
-        tone
-        updatedAt
-      }
-      pricingPlans(orderBy: order_ASC) {
-        id
-        name
-        price
-        priceSuffix
-        features
-        ctaLabel
-        ctaHref
-        ctaTone
-        highlighted
-        highlightLabel
-      }
+      featureCardsJson
+      pricingPlansJson
       featureEyebrow
       featureTitle
       heroDisclaimer

@@ -254,6 +254,8 @@ export function PromoBanner({
   useEffect(() => {
     if (!showTimer) return
     const end = new Date(endsAt).getTime()
+    // No valid end date → no countdown (prevents "NaN: NaN: NaN").
+    if (Number.isNaN(end)) return
     function tick() {
       const diff = end - Date.now()
       if (diff <= 0) {
@@ -271,9 +273,11 @@ export function PromoBanner({
     tick()
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
-  }, [])
+  }, [endsAt, showTimer])
 
-  if (!parts) return null
+  // Render the promo message whenever there is one; the timer only shows with a
+  // valid countdown (so a missing/invalid endsAt hides the timer, not the banner).
+  if (!message) return null
   return (
     <aside
       className={cn(
@@ -286,7 +290,7 @@ export function PromoBanner({
         {message}
       </p>
 
-      {showTimer && (
+      {showTimer && parts && (
         <div className="flex items-center gap-stack">
           <p className="text-lg font-bold tracking-tight-brand tabular-nums sm:text-xl">
             <span aria-hidden>

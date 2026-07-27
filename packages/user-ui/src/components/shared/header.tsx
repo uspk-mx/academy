@@ -70,8 +70,14 @@ export const Header = ({
 }: HeaderProps) => {
   const { pathname } = useLocation()
   const { lang } = useParams()
+  // URL of the STUDENT app, where the dashboard lives (this is the marketing/web
+  // app, a different origin in prod). Empty = same-origin (local single-app dev).
+  const appBase =
+    (import.meta as unknown as { env?: Record<string, string | undefined> }).env
+      ?.VITE_STUDENT_APP_URL ?? ""
   const [openSearch, setOpenSearch] = useState(false)
   const submit = useSubmit()
+  const [open, setOpen] = useState(false)
 
   const sortedNavLinks = navLinks?.sort(
     (linkA, linkB) => linkA.order - linkB.order
@@ -103,7 +109,7 @@ export const Header = ({
         >
           <div>
             <div className="flex h-16 items-center">
-              <Drawer swipeDirection="left">
+              <Drawer swipeDirection="left" open={open} onOpenChange={setOpen}>
                 <DrawerTrigger
                   render={
                     <Button
@@ -144,6 +150,7 @@ export const Header = ({
                           <Link
                             to={page.href}
                             className="-m-2 block p-2 text-base font-medium text-gray-900"
+                            onClick={() => setOpen(false)}
                           >
                             {page.label}
                           </Link>
@@ -307,10 +314,7 @@ export const Header = ({
                       <DropdownMenuGroup>
                         <DropdownMenuItem
                           render={
-                            <Link
-                              to={`/${lang}/dashboard/courses`}
-                              reloadDocument
-                            />
+                            <a href={`${appBase}/${lang}/dashboard/courses`} />
                           }
                         >
                           Mi Aprendizaje
@@ -322,10 +326,7 @@ export const Header = ({
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           render={
-                            <Link
-                              to={`/${lang}/dashboard/profile`}
-                              reloadDocument
-                            />
+                            <a href={`${appBase}/${lang}/dashboard/profile`} />
                           }
                         >
                           Mi Perfil

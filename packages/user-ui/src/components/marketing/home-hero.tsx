@@ -46,7 +46,7 @@ export interface HomeHeroProps {
 export function HomeHero({ content, className }: HomeHeroProps) {
   return (
     <section
-      className={cn("mx-auto px-page-x py-stack md:py-section-y", className)}
+      className={cn("mx-auto px-page-x py-stack pb-12 md:pb-0 md:py-section-y", className)}
     >
       <div className="grid items-center gap-stack-lg md:grid-cols-2">
         <div className="flex flex-col items-start gap-stack-lg">

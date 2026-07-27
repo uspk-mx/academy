@@ -30,6 +30,15 @@ if (token) {
   })
 }
 
+// Register the service worker so the app is installable as a PWA. Production
+// only — in dev a SW interferes with HMR and can serve stale assets. Failures
+// are non-fatal: the app works fine, the install prompt just won't appear.
+if (!import.meta.env.DEV && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch(() => {})
+  })
+}
+
 startTransition(() => {
   hydrateRoot(
     document,

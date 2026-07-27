@@ -4,6 +4,7 @@ import {
   CheckoutSuccessPage,
   type OrderStatus,
 } from "@academy/user-ui/components/pages/checkout-success-page"
+import { studentUrlFor } from "@academy/user-ui/lib/site-urls"
 import { useEffect, useRef } from "react"
 import { useRevalidator } from "react-router"
 import type { Route } from "./+types/success"
@@ -77,7 +78,7 @@ export default function CheckoutSuccess({
     <CheckoutSuccessPage
       status={status}
       items={order?.items ?? undefined}
-      coursesHref={`/${lang}/courses`}
+      coursesHref={studentUrlFor(lang, "/dashboard/courses")}
       homeHref={`/${lang}`}
       retryHref={`/${lang}/checkout`}
       labels={labels}

@@ -1,3 +1,4 @@
+import { studentUrlFor } from "@academy/user-ui/lib/site-urls"
 import { getInitials } from "@academy/user-ui/lib/string"
 import { cn } from "@academy/user-ui/lib/utils"
 import type { AuthState } from "@academy/user-ui/types/api"
@@ -70,11 +71,6 @@ export const Header = ({
 }: HeaderProps) => {
   const { pathname } = useLocation()
   const { lang } = useParams()
-  // URL of the STUDENT app, where the dashboard lives (this is the marketing/web
-  // app, a different origin in prod). Empty = same-origin (local single-app dev).
-  const appBase =
-    (import.meta as unknown as { env?: Record<string, string | undefined> }).env
-      ?.VITE_STUDENT_APP_URL ?? ""
   const [openSearch, setOpenSearch] = useState(false)
   const submit = useSubmit()
   const [open, setOpen] = useState(false)
@@ -314,7 +310,12 @@ export const Header = ({
                       <DropdownMenuGroup>
                         <DropdownMenuItem
                           render={
-                            <a href={`${appBase}/${lang}/dashboard/courses`} />
+                            <a
+                              href={studentUrlFor(
+                                lang ?? "es",
+                                "/dashboard/courses"
+                              )}
+                            />
                           }
                         >
                           Mi Aprendizaje
@@ -326,7 +327,12 @@ export const Header = ({
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           render={
-                            <a href={`${appBase}/${lang}/dashboard/profile`} />
+                            <a
+                              href={studentUrlFor(
+                                lang ?? "es",
+                                "/dashboard/profile"
+                              )}
+                            />
                           }
                         >
                           Mi Perfil

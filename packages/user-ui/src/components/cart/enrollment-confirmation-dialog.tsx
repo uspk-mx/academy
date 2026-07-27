@@ -1,5 +1,6 @@
 import { CoursesData } from "@academy/courses-api/graphql/queries/courses"
 import { CartLine, CartLineItem } from "@academy/user-ui/types/api"
+import { studentUrlFor } from "@academy/user-ui/lib/site-urls"
 import { CourseGrid } from "../course/course-card"
 import { Button } from "../ui/button"
 import {
@@ -73,7 +74,11 @@ export const EnrollmentConfirmationDialog = ({
             render={
               <Button
                 variant="default"
-                render={<Link to={`/${lang}/dashboard/courses`} />}
+                render={
+                  <Link
+                    to={studentUrlFor(lang ?? "es", "/dashboard/courses")}
+                  />
+                }
               >
                 {labels.goToCoursesCta}
               </Button>

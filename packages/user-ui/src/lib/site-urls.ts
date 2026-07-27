@@ -41,6 +41,27 @@ export function marketingUrlFor(lang: string, path: string): string {
 }
 
 /**
+ * Origin of the student app (where the dashboard lives), for links pointing
+ * there FROM the marketing/web app — the inverse of {@link marketingUrlFor}.
+ * Uses the build-inlined `VITE_STUDENT_APP_URL` only (no server override), so
+ * SSR and the hydrated client render the identical href with no hydration
+ * mismatch. "" → same-origin, which is correct inside the student app itself
+ * and in single-app local dev.
+ */
+export function studentAppUrl(): string {
+  return (
+    (import.meta as unknown as { env?: Record<string, string | undefined> }).env
+      ?.VITE_STUDENT_APP_URL || ""
+  ).replace(/\/+$/, "")
+}
+
+/** A locale-scoped URL on the student app (dashboard, courses, profile). */
+export function studentUrlFor(lang: string, path: string): string {
+  const clean = path.startsWith("/") ? path : `/${path}`
+  return `${studentAppUrl()}/${lang}${clean}`
+}
+
+/**
  * Absolute URL of the running app — needed as the `redirect` value when login
  * lives on another origin, since a bare path would resolve against *that* host.
  */

@@ -1,6 +1,7 @@
 import { CartData } from "@academy/courses-api/graphql/queries/cart"
 import { useCountdown } from "@academy/user-ui/hooks/use-countdown"
 import { loginHref, signupHref } from "@academy/user-ui/lib/auth"
+import { studentUrlFor } from "@academy/user-ui/lib/site-urls"
 import { cn } from "@academy/user-ui/lib/utils"
 import {
   AuthState,
@@ -343,7 +344,7 @@ function ActionButtons({
       <BrandButton
         variant="primary"
         size="lg"
-        to={`/${lang ?? "es"}/dashboard/courses/${courseSlug}`}
+        to={studentUrlFor(lang ?? "es", `/dashboard/courses/${courseSlug}`)}
         reloadDocument
         className="w-full"
       >

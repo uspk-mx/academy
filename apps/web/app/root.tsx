@@ -34,10 +34,15 @@ export const links: Route.LinksFunction = () => [
   { rel: "manifest", href: "/manifest.webmanifest" },
 ]
 
+import { basicAuthMiddleware } from "@academy/user-ui/middleware/basic-auth"
 import { securityHeadersMiddleware } from "@academy/user-ui/middleware/security-headers"
 import { posthogMiddleware } from "./lib/posthog-middleware"
 
-export const middleware = [securityHeadersMiddleware, posthogMiddleware]
+export const middleware = [
+  securityHeadersMiddleware,
+  basicAuthMiddleware,
+  posthogMiddleware,
+]
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const url = new URL(request.url)

@@ -20,10 +20,15 @@ import {
   redirectToLocalizedPath,
 } from "@academy/user-ui/lib/lang"
 import type { Route } from "./+types/root"
+import { basicAuthMiddleware } from "@academy/user-ui/middleware/basic-auth"
 import { securityHeadersMiddleware } from "@academy/user-ui/middleware/security-headers"
 import { posthogMiddleware } from "./lib/posthog-middleware"
 
-export const middleware = [securityHeadersMiddleware, posthogMiddleware]
+export const middleware = [
+  securityHeadersMiddleware,
+  basicAuthMiddleware,
+  posthogMiddleware,
+]
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const url = new URL(request.url)

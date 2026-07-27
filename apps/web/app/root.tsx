@@ -25,6 +25,15 @@ import type { Route } from "./+types/root"
 export function meta({ params }: Route.MetaArgs) {
   return buildPageMeta({ lang: params.lang })
 }
+
+export const links: Route.LinksFunction = () => [
+  { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+  { rel: "icon", type: "image/png", sizes: "96x96", href: "/favicon-96x96.png" },
+  { rel: "shortcut icon", href: "/favicon.ico" },
+  { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+  { rel: "manifest", href: "/manifest.webmanifest" },
+]
+
 import { securityHeadersMiddleware } from "@academy/user-ui/middleware/security-headers"
 import { posthogMiddleware } from "./lib/posthog-middleware"
 
@@ -32,8 +41,6 @@ export const middleware = [securityHeadersMiddleware, posthogMiddleware]
 
 export async function loader({ params, request }: Route.LoaderArgs) {
   const url = new URL(request.url)
-
-  // Judge the LOGICAL path — data requests ("/_.data") must not be prefixed.
   const firstSegment = logicalPathname(url).split("/").filter(Boolean)[0]
 
   if (!isSupportedLang(firstSegment)) {
@@ -53,11 +60,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        {/* Favicon + PWA (icons under public/icons — see README asset checklist) */}
-        <link rel="icon" href="/favicon.ico" sizes="48x48" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#FFD123" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />

@@ -98,7 +98,13 @@ export async function getCart(request: Request): Promise<CartData> {
     .query(CART_QUERY, {})
     .toPromise()
 
-  if (result.error) throw new Error(result.error.graphQLErrors.toString())
-  if (!result.data || !result.data.cart) throw new Error("No cart data")
-  return result.data
+  // Runs in a layout loader on every page, so it must never throw: an empty or
+  // absent cart (a guest who hasn't added anything, or a cleared cart) is a
+  // normal state. Surface real backend errors in the logs, but still return an
+  // empty cart so the page keeps rendering. Callers already handle `cart: null`.
+  if (result.error) {
+    console.error("getCart:", result.error.message)
+    return { cart: null }
+  }
+  return result.data ?? { cart: null }
 }

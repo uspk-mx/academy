@@ -25,6 +25,8 @@ export default [
       route("memberships", "./routes/memberships.tsx"),
       route("memberships/:planId", "./routes/memberships/details.tsx"),
       route("checkout/success", "./routes/checkout/success.tsx"),
+      route("terms", "./routes/legal/terms.tsx"),
+      route("privacy", "./routes/legal/privacy.tsx"),
     ]),
     layout("./routes/checkout/checkout-layout.tsx", [
       route("checkout", "./routes/checkout.tsx"),

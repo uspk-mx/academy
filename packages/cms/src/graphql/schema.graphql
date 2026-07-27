@@ -23888,6 +23888,9 @@ interface Entity {
 This enumeration holds all typenames that implement the Entity interface. Components and models implement the Entity interface.
 """
 enum EntityTypeName {
+  TermsAndCondition
+  PrivacyNotice
+
   """User system model"""
   User
 
@@ -27616,6 +27619,476 @@ The Long scalar type represents non-fractional signed whole numeric values. Long
 scalar Long
 
 type Mutation {
+  """Create one termsAndCondition"""
+  createTermsAndCondition(data: TermsAndConditionCreateInput!): TermsAndCondition
+
+  """Update one termsAndCondition"""
+  updateTermsAndCondition(where: TermsAndConditionWhereUniqueInput!, data: TermsAndConditionUpdateInput!): TermsAndCondition
+
+  """
+  Delete one termsAndCondition from _all_ existing stages. Returns deleted document.
+  """
+  deleteTermsAndCondition(
+    """Document to delete"""
+    where: TermsAndConditionWhereUniqueInput!
+  ): TermsAndCondition
+
+  """Upsert one termsAndCondition"""
+  upsertTermsAndCondition(where: TermsAndConditionWhereUniqueInput!, upsert: TermsAndConditionUpsertInput!): TermsAndCondition
+
+  """Publish one termsAndCondition"""
+  publishTermsAndCondition(
+    """Document to publish"""
+    where: TermsAndConditionWhereUniqueInput!
+
+    """Optional localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is set"""
+    withDefaultLocale: Boolean = true
+
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+  ): TermsAndCondition
+
+  """
+  Unpublish one termsAndCondition from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
+  """
+  unpublishTermsAndCondition(
+    """Document to unpublish"""
+    where: TermsAndConditionWhereUniqueInput!
+
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+
+    """
+    Optional locales to unpublish. Unpublishing the default locale will completely remove the document from the selected stages
+    """
+    locales: [Locale!]
+
+    """
+    Unpublish complete document including default localization and relations from stages. Can be disabled.
+    """
+    unpublishBase: Boolean = true
+  ): TermsAndCondition
+
+  """Update many TermsAndCondition documents"""
+  updateManyTermsAndConditionsConnection(
+    """Documents to apply update on"""
+    where: TermsAndConditionManyWhereInput
+
+    """Updates to document content"""
+    data: TermsAndConditionUpdateManyInput!
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+  ): TermsAndConditionConnection!
+
+  """Delete many TermsAndCondition documents, return deleted documents"""
+  deleteManyTermsAndConditionsConnection(
+    """Documents to delete"""
+    where: TermsAndConditionManyWhereInput
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+  ): TermsAndConditionConnection!
+
+  """Publish many TermsAndCondition documents"""
+  publishManyTermsAndConditionsConnection(
+    """Identifies documents in each stage to be published"""
+    where: TermsAndConditionManyWhereInput
+
+    """Stage to find matching documents in"""
+    from: Stage = DRAFT
+
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+
+    """Document localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is true"""
+    withDefaultLocale: Boolean = true
+  ): TermsAndConditionConnection!
+
+  """
+  Find many TermsAndCondition documents that match criteria in specified stage and unpublish from target stages
+  """
+  unpublishManyTermsAndConditionsConnection(
+    """Identifies documents in draft stage"""
+    where: TermsAndConditionManyWhereInput
+
+    """Stage to find matching documents in"""
+    stage: Stage = DRAFT
+
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+
+    """Locales to unpublish"""
+    locales: [Locale!]
+
+    """Whether to unpublish the base document and default localization"""
+    unpublishBase: Boolean = true
+  ): TermsAndConditionConnection!
+
+  """Update many termsAndConditions"""
+  updateManyTermsAndConditions(
+    """Documents to apply update on"""
+    where: TermsAndConditionManyWhereInput
+
+    """Updates to document content"""
+    data: TermsAndConditionUpdateManyInput!
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyTermsAndConditionsConnection)")
+
+  """Delete many TermsAndCondition documents"""
+  deleteManyTermsAndConditions(
+    """Documents to delete"""
+    where: TermsAndConditionManyWhereInput
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyTermsAndConditionsConnection)")
+
+  """Publish many TermsAndCondition documents"""
+  publishManyTermsAndConditions(
+    """Identifies documents in each stage to be published"""
+    where: TermsAndConditionManyWhereInput
+
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+
+    """Document localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is true"""
+    withDefaultLocale: Boolean = true
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyTermsAndConditionsConnection)")
+
+  """Unpublish many TermsAndCondition documents"""
+  unpublishManyTermsAndConditions(
+    """Identifies documents in each stage"""
+    where: TermsAndConditionManyWhereInput
+
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+
+    """Locales to unpublish"""
+    locales: [Locale!]
+
+    """Whether to unpublish the base document and default localization"""
+    unpublishBase: Boolean = true
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyTermsAndConditionsConnection)")
+
+  """Schedule to publish one termsAndCondition"""
+  schedulePublishTermsAndCondition(
+    """Document to publish"""
+    where: TermsAndConditionWhereUniqueInput!
+
+    """Optional localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is set"""
+    withDefaultLocale: Boolean = true
+
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+
+    """
+    Release at point in time, will create new release containing this operation
+    """
+    releaseAt: DateTime
+
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): TermsAndCondition
+
+  """
+  Unpublish one termsAndCondition from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
+  """
+  scheduleUnpublishTermsAndCondition(
+    """Document to unpublish"""
+    where: TermsAndConditionWhereUniqueInput!
+
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+
+    """
+    Release at point in time, will create new release containing this operation
+    """
+    releaseAt: DateTime
+
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+
+    """
+    Optional locales to unpublish. Unpublishing the default locale will completely remove the document from the selected stages
+    """
+    locales: [Locale!]
+
+    """
+    Unpublish complete document including default localization and relations from stages. Can be disabled.
+    """
+    unpublishBase: Boolean = true
+  ): TermsAndCondition
+
+  """Create one privacyNotice"""
+  createPrivacyNotice(data: PrivacyNoticeCreateInput!): PrivacyNotice
+
+  """Update one privacyNotice"""
+  updatePrivacyNotice(where: PrivacyNoticeWhereUniqueInput!, data: PrivacyNoticeUpdateInput!): PrivacyNotice
+
+  """
+  Delete one privacyNotice from _all_ existing stages. Returns deleted document.
+  """
+  deletePrivacyNotice(
+    """Document to delete"""
+    where: PrivacyNoticeWhereUniqueInput!
+  ): PrivacyNotice
+
+  """Upsert one privacyNotice"""
+  upsertPrivacyNotice(where: PrivacyNoticeWhereUniqueInput!, upsert: PrivacyNoticeUpsertInput!): PrivacyNotice
+
+  """Publish one privacyNotice"""
+  publishPrivacyNotice(
+    """Document to publish"""
+    where: PrivacyNoticeWhereUniqueInput!
+
+    """Optional localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is set"""
+    withDefaultLocale: Boolean = true
+
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+  ): PrivacyNotice
+
+  """
+  Unpublish one privacyNotice from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
+  """
+  unpublishPrivacyNotice(
+    """Document to unpublish"""
+    where: PrivacyNoticeWhereUniqueInput!
+
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+
+    """
+    Optional locales to unpublish. Unpublishing the default locale will completely remove the document from the selected stages
+    """
+    locales: [Locale!]
+
+    """
+    Unpublish complete document including default localization and relations from stages. Can be disabled.
+    """
+    unpublishBase: Boolean = true
+  ): PrivacyNotice
+
+  """Update many PrivacyNotice documents"""
+  updateManyPrivacyNoticesConnection(
+    """Documents to apply update on"""
+    where: PrivacyNoticeManyWhereInput
+
+    """Updates to document content"""
+    data: PrivacyNoticeUpdateManyInput!
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+  ): PrivacyNoticeConnection!
+
+  """Delete many PrivacyNotice documents, return deleted documents"""
+  deleteManyPrivacyNoticesConnection(
+    """Documents to delete"""
+    where: PrivacyNoticeManyWhereInput
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+  ): PrivacyNoticeConnection!
+
+  """Publish many PrivacyNotice documents"""
+  publishManyPrivacyNoticesConnection(
+    """Identifies documents in each stage to be published"""
+    where: PrivacyNoticeManyWhereInput
+
+    """Stage to find matching documents in"""
+    from: Stage = DRAFT
+
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+
+    """Document localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is true"""
+    withDefaultLocale: Boolean = true
+  ): PrivacyNoticeConnection!
+
+  """
+  Find many PrivacyNotice documents that match criteria in specified stage and unpublish from target stages
+  """
+  unpublishManyPrivacyNoticesConnection(
+    """Identifies documents in draft stage"""
+    where: PrivacyNoticeManyWhereInput
+
+    """Stage to find matching documents in"""
+    stage: Stage = DRAFT
+
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+    skip: Int
+    first: Int
+    last: Int
+    before: ID
+    after: ID
+
+    """Locales to unpublish"""
+    locales: [Locale!]
+
+    """Whether to unpublish the base document and default localization"""
+    unpublishBase: Boolean = true
+  ): PrivacyNoticeConnection!
+
+  """Update many privacyNotices"""
+  updateManyPrivacyNotices(
+    """Documents to apply update on"""
+    where: PrivacyNoticeManyWhereInput
+
+    """Updates to document content"""
+    data: PrivacyNoticeUpdateManyInput!
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (updateManyPrivacyNoticesConnection)")
+
+  """Delete many PrivacyNotice documents"""
+  deleteManyPrivacyNotices(
+    """Documents to delete"""
+    where: PrivacyNoticeManyWhereInput
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (deleteManyPrivacyNoticesConnection)")
+
+  """Publish many PrivacyNotice documents"""
+  publishManyPrivacyNotices(
+    """Identifies documents in each stage to be published"""
+    where: PrivacyNoticeManyWhereInput
+
+    """Stages to publish documents to"""
+    to: [Stage!]! = [PUBLISHED]
+
+    """Document localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is true"""
+    withDefaultLocale: Boolean = true
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (publishManyPrivacyNoticesConnection)")
+
+  """Unpublish many PrivacyNotice documents"""
+  unpublishManyPrivacyNotices(
+    """Identifies documents in each stage"""
+    where: PrivacyNoticeManyWhereInput
+
+    """Stages to unpublish documents from"""
+    from: [Stage!]! = [PUBLISHED]
+
+    """Locales to unpublish"""
+    locales: [Locale!]
+
+    """Whether to unpublish the base document and default localization"""
+    unpublishBase: Boolean = true
+  ): BatchPayload! @deprecated(reason: "Please use the new paginated many mutation (unpublishManyPrivacyNoticesConnection)")
+
+  """Schedule to publish one privacyNotice"""
+  schedulePublishPrivacyNotice(
+    """Document to publish"""
+    where: PrivacyNoticeWhereUniqueInput!
+
+    """Optional localizations to publish"""
+    locales: [Locale!]
+
+    """Whether to publish the base document"""
+    publishBase: Boolean = true
+
+    """Whether to include the default locale when publishBase is set"""
+    withDefaultLocale: Boolean = true
+
+    """Publishing target stage"""
+    to: [Stage!]! = [PUBLISHED]
+
+    """
+    Release at point in time, will create new release containing this operation
+    """
+    releaseAt: DateTime
+
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+  ): PrivacyNotice
+
+  """
+  Unpublish one privacyNotice from selected stages. Unpublish either the complete document with its relations, localizations and base data or specific localizations only.
+  """
+  scheduleUnpublishPrivacyNotice(
+    """Document to unpublish"""
+    where: PrivacyNoticeWhereUniqueInput!
+
+    """Stages to unpublish document from"""
+    from: [Stage!]! = [PUBLISHED]
+
+    """
+    Release at point in time, will create new release containing this operation
+    """
+    releaseAt: DateTime
+
+    """Optionally attach this scheduled operation to an existing release"""
+    releaseId: String
+
+    """
+    Optional locales to unpublish. Unpublishing the default locale will completely remove the document from the selected stages
+    """
+    locales: [Locale!]
+
+    """
+    Unpublish complete document including default localization and relations from stages. Can be disabled.
+    """
+    unpublishBase: Boolean = true
+  ): PrivacyNotice
+
   """
   Create an asset. Use the returned info to finish the creation process by uploading the asset.
   """
@@ -36472,6 +36945,812 @@ input PricingPlanWhereUniqueInput {
   id: ID
 }
 
+type PrivacyNotice implements Node & Entity {
+  """System stage field"""
+  stage: Stage!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """
+    Potential locales that should be returned.
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, es_MX]
+
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+  ): [PrivacyNotice!]!
+
+  """Get the document in other stages"""
+  documentInStages(
+    """Potential stages that should be returned"""
+    stages: [Stage!]! = [DRAFT, PUBLISHED]
+
+    """Decides if the current stage should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree
+    """
+    inheritLocale: Boolean! = false
+  ): [PrivacyNotice!]!
+
+  """The time the document was published. Null on documents in draft stage."""
+  publishedAt(
+    """
+    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
+    """
+    variation: SystemDateTimeFieldVariation! = COMBINED
+  ): DateTime
+
+  """The time the document was updated"""
+  updatedAt(
+    """
+    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
+    """
+    variation: SystemDateTimeFieldVariation! = COMBINED
+  ): DateTime!
+
+  """The time the document was created"""
+  createdAt(
+    """
+    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
+    """
+    variation: SystemDateTimeFieldVariation! = COMBINED
+  ): DateTime!
+
+  """The unique identifier"""
+  id: ID!
+  heading: String
+  lastUpdatedLabel: String
+  lastUpdated: Date
+  content: RichText
+
+  """User that last published this document"""
+  publishedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): User
+
+  """User that last updated this document"""
+  updatedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): User
+
+  """User that created this document"""
+  createdBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): User
+  scheduledIn(
+    where: ScheduledOperationWhereInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): [ScheduledOperation!]!
+
+  """List of PrivacyNotice versions"""
+  history(
+    limit: Int! = 10
+    skip: Int! = 0
+
+    """
+    This is optional and can be used to fetch the document version history for a specific stage instead of the current one
+    """
+    stageOverride: Stage
+  ): [Version!]!
+}
+
+input PrivacyNoticeConnectInput {
+  """Document to connect"""
+  where: PrivacyNoticeWhereUniqueInput!
+
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""A connection to a list of items."""
+type PrivacyNoticeConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PrivacyNoticeEdge!]!
+  aggregate: Aggregate!
+}
+
+input PrivacyNoticeCreateInput {
+  updatedAt: DateTime
+  createdAt: DateTime
+
+  """heading input for default locale (en)"""
+  heading: String
+
+  """lastUpdatedLabel input for default locale (en)"""
+  lastUpdatedLabel: String
+  lastUpdated: Date
+
+  """content input for default locale (en)"""
+  content: RichTextAST
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: PrivacyNoticeCreateLocalizationsInput
+}
+
+input PrivacyNoticeCreateLocalizationDataInput {
+  updatedAt: DateTime
+  createdAt: DateTime
+  heading: String
+  lastUpdatedLabel: String
+  content: RichTextAST
+}
+
+input PrivacyNoticeCreateLocalizationInput {
+  """Localization input"""
+  data: PrivacyNoticeCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input PrivacyNoticeCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [PrivacyNoticeCreateLocalizationInput!]
+}
+
+input PrivacyNoticeCreateManyInlineInput {
+  """Create and connect multiple existing PrivacyNotice documents"""
+  create: [PrivacyNoticeCreateInput!]
+
+  """Connect multiple existing PrivacyNotice documents"""
+  connect: [PrivacyNoticeWhereUniqueInput!]
+}
+
+input PrivacyNoticeCreateOneInlineInput {
+  """Create and connect one PrivacyNotice document"""
+  create: PrivacyNoticeCreateInput
+
+  """Connect one existing PrivacyNotice document"""
+  connect: PrivacyNoticeWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type PrivacyNoticeEdge {
+  """The item at the end of the edge."""
+  node: PrivacyNotice!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Identifies documents"""
+input PrivacyNoticeManyWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+
+  """Logical AND on all given filters."""
+  AND: [PrivacyNoticeWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PrivacyNoticeWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PrivacyNoticeWhereInput!]
+  documentInStages_every: PrivacyNoticeWhereStageInput
+  documentInStages_some: PrivacyNoticeWhereStageInput
+  documentInStages_none: PrivacyNoticeWhereStageInput
+  publishedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  publishedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  updatedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  id: ID
+
+  """Any other value that exists and is not equal to the given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  lastUpdated: Date
+
+  """Any other value that exists and is not equal to the given value."""
+  lastUpdated_not: Date
+
+  """All values that are contained in given list."""
+  lastUpdated_in: [Date]
+
+  """All values that are not contained in given list."""
+  lastUpdated_not_in: [Date]
+
+  """All values less than the given value."""
+  lastUpdated_lt: Date
+
+  """All values less than or equal the given value."""
+  lastUpdated_lte: Date
+
+  """All values greater than the given value."""
+  lastUpdated_gt: Date
+
+  """All values greater than or equal the given value."""
+  lastUpdated_gte: Date
+  publishedBy: UserWhereInput
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  scheduledIn_every: ScheduledOperationWhereInput
+  scheduledIn_some: ScheduledOperationWhereInput
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+enum PrivacyNoticeOrderByInput {
+  publishedAt_ASC
+  publishedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  heading_ASC
+  heading_DESC
+  lastUpdatedLabel_ASC
+  lastUpdatedLabel_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+}
+
+input PrivacyNoticeUpdateInput {
+  """heading input for default locale (en)"""
+  heading: String
+
+  """lastUpdatedLabel input for default locale (en)"""
+  lastUpdatedLabel: String
+  lastUpdated: Date
+
+  """content input for default locale (en)"""
+  content: RichTextAST
+
+  """Manage document localizations"""
+  localizations: PrivacyNoticeUpdateLocalizationsInput
+}
+
+input PrivacyNoticeUpdateLocalizationDataInput {
+  heading: String
+  lastUpdatedLabel: String
+  content: RichTextAST
+}
+
+input PrivacyNoticeUpdateLocalizationInput {
+  data: PrivacyNoticeUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input PrivacyNoticeUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [PrivacyNoticeCreateLocalizationInput!]
+
+  """Localizations to update"""
+  update: [PrivacyNoticeUpdateLocalizationInput!]
+  upsert: [PrivacyNoticeUpsertLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+}
+
+input PrivacyNoticeUpdateManyInlineInput {
+  """Create and connect multiple PrivacyNotice documents"""
+  create: [PrivacyNoticeCreateInput!]
+
+  """Connect multiple existing PrivacyNotice documents"""
+  connect: [PrivacyNoticeConnectInput!]
+
+  """
+  Override currently-connected documents with multiple existing PrivacyNotice documents
+  """
+  set: [PrivacyNoticeWhereUniqueInput!]
+
+  """Update multiple PrivacyNotice documents"""
+  update: [PrivacyNoticeUpdateWithNestedWhereUniqueInput!]
+
+  """Upsert multiple PrivacyNotice documents"""
+  upsert: [PrivacyNoticeUpsertWithNestedWhereUniqueInput!]
+
+  """Disconnect multiple PrivacyNotice documents"""
+  disconnect: [PrivacyNoticeWhereUniqueInput!]
+
+  """Delete multiple PrivacyNotice documents"""
+  delete: [PrivacyNoticeWhereUniqueInput!]
+}
+
+input PrivacyNoticeUpdateManyInput {
+  """heading input for default locale (en)"""
+  heading: String
+
+  """lastUpdatedLabel input for default locale (en)"""
+  lastUpdatedLabel: String
+  lastUpdated: Date
+
+  """content input for default locale (en)"""
+  content: RichTextAST
+
+  """Optional updates to localizations"""
+  localizations: PrivacyNoticeUpdateManyLocalizationsInput
+}
+
+input PrivacyNoticeUpdateManyLocalizationDataInput {
+  heading: String
+  lastUpdatedLabel: String
+  content: RichTextAST
+}
+
+input PrivacyNoticeUpdateManyLocalizationInput {
+  data: PrivacyNoticeUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input PrivacyNoticeUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [PrivacyNoticeUpdateManyLocalizationInput!]
+}
+
+input PrivacyNoticeUpdateManyWithNestedWhereInput {
+  """Document search"""
+  where: PrivacyNoticeWhereInput!
+
+  """Update many input"""
+  data: PrivacyNoticeUpdateManyInput!
+}
+
+input PrivacyNoticeUpdateOneInlineInput {
+  """Create and connect one PrivacyNotice document"""
+  create: PrivacyNoticeCreateInput
+
+  """Update single PrivacyNotice document"""
+  update: PrivacyNoticeUpdateWithNestedWhereUniqueInput
+
+  """Upsert single PrivacyNotice document"""
+  upsert: PrivacyNoticeUpsertWithNestedWhereUniqueInput
+
+  """Connect existing PrivacyNotice document"""
+  connect: PrivacyNoticeWhereUniqueInput
+
+  """Disconnect currently connected PrivacyNotice document"""
+  disconnect: Boolean
+
+  """Delete currently connected PrivacyNotice document"""
+  delete: Boolean
+}
+
+input PrivacyNoticeUpdateWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: PrivacyNoticeWhereUniqueInput!
+
+  """Document to update"""
+  data: PrivacyNoticeUpdateInput!
+}
+
+input PrivacyNoticeUpsertInput {
+  """Create document if it didn't exist"""
+  create: PrivacyNoticeCreateInput!
+
+  """Update document if it exists"""
+  update: PrivacyNoticeUpdateInput!
+}
+
+input PrivacyNoticeUpsertLocalizationInput {
+  update: PrivacyNoticeUpdateLocalizationDataInput!
+  create: PrivacyNoticeCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input PrivacyNoticeUpsertWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: PrivacyNoticeWhereUniqueInput!
+
+  """Upsert data"""
+  data: PrivacyNoticeUpsertInput!
+}
+
+"""
+This contains a set of filters that can be used to compare values internally
+"""
+input PrivacyNoticeWhereComparatorInput {
+  """
+  This field can be used to request to check if the entry is outdated by internal comparison
+  """
+  outdated_to: Boolean
+}
+
+"""Identifies documents"""
+input PrivacyNoticeWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+
+  """Logical AND on all given filters."""
+  AND: [PrivacyNoticeWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PrivacyNoticeWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PrivacyNoticeWhereInput!]
+  documentInStages_every: PrivacyNoticeWhereStageInput
+  documentInStages_some: PrivacyNoticeWhereStageInput
+  documentInStages_none: PrivacyNoticeWhereStageInput
+  publishedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  publishedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  updatedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  id: ID
+
+  """Any other value that exists and is not equal to the given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  heading: String
+
+  """Any other value that exists and is not equal to the given value."""
+  heading_not: String
+
+  """All values that are contained in given list."""
+  heading_in: [String]
+
+  """All values that are not contained in given list."""
+  heading_not_in: [String]
+
+  """All values containing the given string."""
+  heading_contains: String
+
+  """All values not containing the given string."""
+  heading_not_contains: String
+
+  """All values starting with the given string."""
+  heading_starts_with: String
+
+  """All values not starting with the given string."""
+  heading_not_starts_with: String
+
+  """All values ending with the given string."""
+  heading_ends_with: String
+
+  """All values not ending with the given string"""
+  heading_not_ends_with: String
+  lastUpdatedLabel: String
+
+  """Any other value that exists and is not equal to the given value."""
+  lastUpdatedLabel_not: String
+
+  """All values that are contained in given list."""
+  lastUpdatedLabel_in: [String]
+
+  """All values that are not contained in given list."""
+  lastUpdatedLabel_not_in: [String]
+
+  """All values containing the given string."""
+  lastUpdatedLabel_contains: String
+
+  """All values not containing the given string."""
+  lastUpdatedLabel_not_contains: String
+
+  """All values starting with the given string."""
+  lastUpdatedLabel_starts_with: String
+
+  """All values not starting with the given string."""
+  lastUpdatedLabel_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastUpdatedLabel_ends_with: String
+
+  """All values not ending with the given string"""
+  lastUpdatedLabel_not_ends_with: String
+  lastUpdated: Date
+
+  """Any other value that exists and is not equal to the given value."""
+  lastUpdated_not: Date
+
+  """All values that are contained in given list."""
+  lastUpdated_in: [Date]
+
+  """All values that are not contained in given list."""
+  lastUpdated_not_in: [Date]
+
+  """All values less than the given value."""
+  lastUpdated_lt: Date
+
+  """All values less than or equal the given value."""
+  lastUpdated_lte: Date
+
+  """All values greater than the given value."""
+  lastUpdated_gt: Date
+
+  """All values greater than or equal the given value."""
+  lastUpdated_gte: Date
+  publishedBy: UserWhereInput
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  scheduledIn_every: ScheduledOperationWhereInput
+  scheduledIn_some: ScheduledOperationWhereInput
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+"""
+The document in stages filter allows specifying a stage entry to cross compare the same document between different stages
+"""
+input PrivacyNoticeWhereStageInput {
+  """Logical AND on all given filters."""
+  AND: [PrivacyNoticeWhereStageInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PrivacyNoticeWhereStageInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PrivacyNoticeWhereStageInput!]
+
+  """Specify the stage to compare with"""
+  stage: Stage
+
+  """
+  This field contains fields which can be set as true or false to specify an internal comparison
+  """
+  compareWithParent: PrivacyNoticeWhereComparatorInput
+}
+
+"""References PrivacyNotice record uniquely"""
+input PrivacyNoticeWhereUniqueInput {
+  id: ID
+}
+
 input PublishLocaleInput {
   """Locales to publish"""
   locale: Locale!
@@ -36506,6 +37785,134 @@ type Query {
     """Defines which locales to query for"""
     locales: [Locale!]
   ): [Entity!]
+
+  """Retrieve multiple termsAndConditions"""
+  termsAndConditions(
+    where: TermsAndConditionWhereInput
+    orderBy: TermsAndConditionOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+    stage: Stage! = PUBLISHED
+
+    """
+    Defines which locales should be returned.
+    
+    Note that `TermsAndCondition` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): [TermsAndCondition!]!
+
+  """Retrieve a single termsAndCondition"""
+  termsAndCondition(
+    where: TermsAndConditionWhereUniqueInput!
+    stage: Stage! = PUBLISHED
+
+    """
+    Defines which locales should be returned.
+    
+    Note that `TermsAndCondition` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): TermsAndCondition
+
+  """
+  Retrieve multiple termsAndConditions using the Relay connection interface
+  """
+  termsAndConditionsConnection(
+    where: TermsAndConditionWhereInput
+    orderBy: TermsAndConditionOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+    stage: Stage! = PUBLISHED
+
+    """
+    Defines which locales should be returned.
+    
+    Note that `TermsAndCondition` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): TermsAndConditionConnection!
+
+  """Retrieve document version"""
+  termsAndConditionVersion(where: VersionWhereInput!): DocumentVersion
+
+  """Retrieve multiple privacyNotices"""
+  privacyNotices(
+    where: PrivacyNoticeWhereInput
+    orderBy: PrivacyNoticeOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+    stage: Stage! = PUBLISHED
+
+    """
+    Defines which locales should be returned.
+    
+    Note that `PrivacyNotice` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): [PrivacyNotice!]!
+
+  """Retrieve a single privacyNotice"""
+  privacyNotice(
+    where: PrivacyNoticeWhereUniqueInput!
+    stage: Stage! = PUBLISHED
+
+    """
+    Defines which locales should be returned.
+    
+    Note that `PrivacyNotice` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): PrivacyNotice
+
+  """Retrieve multiple privacyNotices using the Relay connection interface"""
+  privacyNoticesConnection(
+    where: PrivacyNoticeWhereInput
+    orderBy: PrivacyNoticeOrderByInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+    stage: Stage! = PUBLISHED
+
+    """
+    Defines which locales should be returned.
+    
+    Note that `PrivacyNotice` will be affected directly by this argument, as well as any other related models with localized fields in the query's subtree.
+    The first locale matching the provided list will be returned, entries with non matching locales will be filtered out.
+    
+    This argument may be overwritten by another locales definition in a relational child field, this will effectively use the overwritten argument for the affected query's subtree.
+    """
+    locales: [Locale!]! = [en]
+  ): PrivacyNoticeConnection!
+
+  """Retrieve document version"""
+  privacyNoticeVersion(where: VersionWhereInput!): DocumentVersion
 
   """Retrieve multiple users"""
   users(
@@ -38482,7 +39889,7 @@ type ScheduledOperation implements Node & Entity {
   ): [ScheduledOperationAffectedDocument!]!
 }
 
-union ScheduledOperationAffectedDocument = AboutPage | Asset | AudienceCard | AuthPage | BlockEmbed | BlockImage | BlockVideo | BlogPage | BlogPost | CartPage | CheckoutPage | CommonLabels | CompanyLogo | CourseDetailsPage | CoursesPage | CtaBanner | FeatureCard | FooterColumn | HomePage | NavLink | OrderStatusPage | PricingPlan | SiteConfig | TeamMember | Testimonial
+union ScheduledOperationAffectedDocument = AboutPage | Asset | AudienceCard | AuthPage | BlockEmbed | BlockImage | BlockVideo | BlogPage | BlogPost | CartPage | CheckoutPage | CommonLabels | CompanyLogo | CourseDetailsPage | CoursesPage | CtaBanner | FeatureCard | FooterColumn | HomePage | NavLink | OrderStatusPage | PricingPlan | PrivacyNotice | SiteConfig | TeamMember | TermsAndCondition | Testimonial
 
 input ScheduledOperationConnectInput {
   """Document to connect"""
@@ -41953,6 +43360,812 @@ input TeamMemberWhereStageInput {
 
 """References TeamMember record uniquely"""
 input TeamMemberWhereUniqueInput {
+  id: ID
+}
+
+type TermsAndCondition implements Node & Entity {
+  """System stage field"""
+  stage: Stage!
+
+  """System Locale field"""
+  locale: Locale!
+
+  """Get the other localizations for this document"""
+  localizations(
+    """
+    Potential locales that should be returned.
+    
+    The order of locales will also override locale fall-backing behaviour in the query's subtree.
+    
+    Note any related model with localized fields in the query's subtree will be affected.
+    The first locale matching the provided list will be returned, localized entries that do not have the provided locale defined will be filtered out.
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    
+    Consider using this in conjunction with forceParentLocale on the children relation fields.
+    """
+    locales: [Locale!]! = [en, es_MX]
+
+    """Decides if the current locale should be included or not"""
+    includeCurrent: Boolean! = false
+  ): [TermsAndCondition!]!
+
+  """Get the document in other stages"""
+  documentInStages(
+    """Potential stages that should be returned"""
+    stages: [Stage!]! = [DRAFT, PUBLISHED]
+
+    """Decides if the current stage should be included or not"""
+    includeCurrent: Boolean! = false
+
+    """
+    Decides if the documents should match the parent documents locale or should use the fallback order defined in the tree
+    """
+    inheritLocale: Boolean! = false
+  ): [TermsAndCondition!]!
+
+  """The time the document was published. Null on documents in draft stage."""
+  publishedAt(
+    """
+    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
+    """
+    variation: SystemDateTimeFieldVariation! = COMBINED
+  ): DateTime
+
+  """The time the document was updated"""
+  updatedAt(
+    """
+    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
+    """
+    variation: SystemDateTimeFieldVariation! = COMBINED
+  ): DateTime!
+
+  """The time the document was created"""
+  createdAt(
+    """
+    Variation of DateTime field to return, allows value from base document, current localization, or combined by returning the newer value of both
+    """
+    variation: SystemDateTimeFieldVariation! = COMBINED
+  ): DateTime!
+
+  """The unique identifier"""
+  id: ID!
+  heading: String
+  lastUpdatedLabel: String
+  lastUpdated: Date
+  content: RichText
+
+  """User that last published this document"""
+  publishedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `publishedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): User
+
+  """User that last updated this document"""
+  updatedBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `updatedBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): User
+
+  """User that created this document"""
+  createdBy(
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `createdBy` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): User
+  scheduledIn(
+    where: ScheduledOperationWhereInput
+    skip: Int
+    after: String
+    before: String
+    first: Int
+    last: Int
+
+    """
+    Allows to optionally override locale filtering behaviour in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locales will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will overwrite any existing locale filtering defined in the query's tree for the subtree.
+    """
+    locales: [Locale!]
+
+    """
+    Sets the locale of the resolved parent document as the only locale in the query's subtree.
+    
+    Note that `scheduledIn` is a model without localized fields and will not be affected directly by this argument, however the locale will be passed on to any relational fields in the query's subtree for filtering.
+    For related models with localized fields in the query's subtree, the first locale matching the provided list of locales will be returned, entries with non matching locales will be filtered out.
+    
+    This argument will affect any existing locale filtering defined in the query's tree for the subtree.
+    """
+    forceParentLocale: Boolean
+  ): [ScheduledOperation!]!
+
+  """List of TermsAndCondition versions"""
+  history(
+    limit: Int! = 10
+    skip: Int! = 0
+
+    """
+    This is optional and can be used to fetch the document version history for a specific stage instead of the current one
+    """
+    stageOverride: Stage
+  ): [Version!]!
+}
+
+input TermsAndConditionConnectInput {
+  """Document to connect"""
+  where: TermsAndConditionWhereUniqueInput!
+
+  """
+  Allow to specify document position in list of connected documents, will default to appending at end of list
+  """
+  position: ConnectPositionInput
+}
+
+"""A connection to a list of items."""
+type TermsAndConditionConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [TermsAndConditionEdge!]!
+  aggregate: Aggregate!
+}
+
+input TermsAndConditionCreateInput {
+  updatedAt: DateTime
+  createdAt: DateTime
+
+  """heading input for default locale (en)"""
+  heading: String
+
+  """lastUpdatedLabel input for default locale (en)"""
+  lastUpdatedLabel: String
+  lastUpdated: Date
+
+  """content input for default locale (en)"""
+  content: RichTextAST
+
+  """
+  Inline mutations for managing document localizations excluding the default locale
+  """
+  localizations: TermsAndConditionCreateLocalizationsInput
+}
+
+input TermsAndConditionCreateLocalizationDataInput {
+  updatedAt: DateTime
+  createdAt: DateTime
+  heading: String
+  lastUpdatedLabel: String
+  content: RichTextAST
+}
+
+input TermsAndConditionCreateLocalizationInput {
+  """Localization input"""
+  data: TermsAndConditionCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TermsAndConditionCreateLocalizationsInput {
+  """Create localizations for the newly-created document"""
+  create: [TermsAndConditionCreateLocalizationInput!]
+}
+
+input TermsAndConditionCreateManyInlineInput {
+  """Create and connect multiple existing TermsAndCondition documents"""
+  create: [TermsAndConditionCreateInput!]
+
+  """Connect multiple existing TermsAndCondition documents"""
+  connect: [TermsAndConditionWhereUniqueInput!]
+}
+
+input TermsAndConditionCreateOneInlineInput {
+  """Create and connect one TermsAndCondition document"""
+  create: TermsAndConditionCreateInput
+
+  """Connect one existing TermsAndCondition document"""
+  connect: TermsAndConditionWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type TermsAndConditionEdge {
+  """The item at the end of the edge."""
+  node: TermsAndCondition!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+"""Identifies documents"""
+input TermsAndConditionManyWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+
+  """Logical AND on all given filters."""
+  AND: [TermsAndConditionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TermsAndConditionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TermsAndConditionWhereInput!]
+  documentInStages_every: TermsAndConditionWhereStageInput
+  documentInStages_some: TermsAndConditionWhereStageInput
+  documentInStages_none: TermsAndConditionWhereStageInput
+  publishedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  publishedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  updatedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  id: ID
+
+  """Any other value that exists and is not equal to the given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  lastUpdated: Date
+
+  """Any other value that exists and is not equal to the given value."""
+  lastUpdated_not: Date
+
+  """All values that are contained in given list."""
+  lastUpdated_in: [Date]
+
+  """All values that are not contained in given list."""
+  lastUpdated_not_in: [Date]
+
+  """All values less than the given value."""
+  lastUpdated_lt: Date
+
+  """All values less than or equal the given value."""
+  lastUpdated_lte: Date
+
+  """All values greater than the given value."""
+  lastUpdated_gt: Date
+
+  """All values greater than or equal the given value."""
+  lastUpdated_gte: Date
+  publishedBy: UserWhereInput
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  scheduledIn_every: ScheduledOperationWhereInput
+  scheduledIn_some: ScheduledOperationWhereInput
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+enum TermsAndConditionOrderByInput {
+  publishedAt_ASC
+  publishedAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  id_ASC
+  id_DESC
+  heading_ASC
+  heading_DESC
+  lastUpdatedLabel_ASC
+  lastUpdatedLabel_DESC
+  lastUpdated_ASC
+  lastUpdated_DESC
+}
+
+input TermsAndConditionUpdateInput {
+  """heading input for default locale (en)"""
+  heading: String
+
+  """lastUpdatedLabel input for default locale (en)"""
+  lastUpdatedLabel: String
+  lastUpdated: Date
+
+  """content input for default locale (en)"""
+  content: RichTextAST
+
+  """Manage document localizations"""
+  localizations: TermsAndConditionUpdateLocalizationsInput
+}
+
+input TermsAndConditionUpdateLocalizationDataInput {
+  heading: String
+  lastUpdatedLabel: String
+  content: RichTextAST
+}
+
+input TermsAndConditionUpdateLocalizationInput {
+  data: TermsAndConditionUpdateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TermsAndConditionUpdateLocalizationsInput {
+  """Localizations to create"""
+  create: [TermsAndConditionCreateLocalizationInput!]
+
+  """Localizations to update"""
+  update: [TermsAndConditionUpdateLocalizationInput!]
+  upsert: [TermsAndConditionUpsertLocalizationInput!]
+
+  """Localizations to delete"""
+  delete: [Locale!]
+}
+
+input TermsAndConditionUpdateManyInlineInput {
+  """Create and connect multiple TermsAndCondition documents"""
+  create: [TermsAndConditionCreateInput!]
+
+  """Connect multiple existing TermsAndCondition documents"""
+  connect: [TermsAndConditionConnectInput!]
+
+  """
+  Override currently-connected documents with multiple existing TermsAndCondition documents
+  """
+  set: [TermsAndConditionWhereUniqueInput!]
+
+  """Update multiple TermsAndCondition documents"""
+  update: [TermsAndConditionUpdateWithNestedWhereUniqueInput!]
+
+  """Upsert multiple TermsAndCondition documents"""
+  upsert: [TermsAndConditionUpsertWithNestedWhereUniqueInput!]
+
+  """Disconnect multiple TermsAndCondition documents"""
+  disconnect: [TermsAndConditionWhereUniqueInput!]
+
+  """Delete multiple TermsAndCondition documents"""
+  delete: [TermsAndConditionWhereUniqueInput!]
+}
+
+input TermsAndConditionUpdateManyInput {
+  """heading input for default locale (en)"""
+  heading: String
+
+  """lastUpdatedLabel input for default locale (en)"""
+  lastUpdatedLabel: String
+  lastUpdated: Date
+
+  """content input for default locale (en)"""
+  content: RichTextAST
+
+  """Optional updates to localizations"""
+  localizations: TermsAndConditionUpdateManyLocalizationsInput
+}
+
+input TermsAndConditionUpdateManyLocalizationDataInput {
+  heading: String
+  lastUpdatedLabel: String
+  content: RichTextAST
+}
+
+input TermsAndConditionUpdateManyLocalizationInput {
+  data: TermsAndConditionUpdateManyLocalizationDataInput!
+  locale: Locale!
+}
+
+input TermsAndConditionUpdateManyLocalizationsInput {
+  """Localizations to update"""
+  update: [TermsAndConditionUpdateManyLocalizationInput!]
+}
+
+input TermsAndConditionUpdateManyWithNestedWhereInput {
+  """Document search"""
+  where: TermsAndConditionWhereInput!
+
+  """Update many input"""
+  data: TermsAndConditionUpdateManyInput!
+}
+
+input TermsAndConditionUpdateOneInlineInput {
+  """Create and connect one TermsAndCondition document"""
+  create: TermsAndConditionCreateInput
+
+  """Update single TermsAndCondition document"""
+  update: TermsAndConditionUpdateWithNestedWhereUniqueInput
+
+  """Upsert single TermsAndCondition document"""
+  upsert: TermsAndConditionUpsertWithNestedWhereUniqueInput
+
+  """Connect existing TermsAndCondition document"""
+  connect: TermsAndConditionWhereUniqueInput
+
+  """Disconnect currently connected TermsAndCondition document"""
+  disconnect: Boolean
+
+  """Delete currently connected TermsAndCondition document"""
+  delete: Boolean
+}
+
+input TermsAndConditionUpdateWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: TermsAndConditionWhereUniqueInput!
+
+  """Document to update"""
+  data: TermsAndConditionUpdateInput!
+}
+
+input TermsAndConditionUpsertInput {
+  """Create document if it didn't exist"""
+  create: TermsAndConditionCreateInput!
+
+  """Update document if it exists"""
+  update: TermsAndConditionUpdateInput!
+}
+
+input TermsAndConditionUpsertLocalizationInput {
+  update: TermsAndConditionUpdateLocalizationDataInput!
+  create: TermsAndConditionCreateLocalizationDataInput!
+  locale: Locale!
+}
+
+input TermsAndConditionUpsertWithNestedWhereUniqueInput {
+  """Unique document search"""
+  where: TermsAndConditionWhereUniqueInput!
+
+  """Upsert data"""
+  data: TermsAndConditionUpsertInput!
+}
+
+"""
+This contains a set of filters that can be used to compare values internally
+"""
+input TermsAndConditionWhereComparatorInput {
+  """
+  This field can be used to request to check if the entry is outdated by internal comparison
+  """
+  outdated_to: Boolean
+}
+
+"""Identifies documents"""
+input TermsAndConditionWhereInput {
+  """Contains search across all appropriate fields."""
+  _search: String
+
+  """Logical AND on all given filters."""
+  AND: [TermsAndConditionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TermsAndConditionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TermsAndConditionWhereInput!]
+  documentInStages_every: TermsAndConditionWhereStageInput
+  documentInStages_some: TermsAndConditionWhereStageInput
+  documentInStages_none: TermsAndConditionWhereStageInput
+  publishedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  publishedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  publishedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  publishedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  publishedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  publishedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  publishedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  publishedAt_gte: DateTime
+  updatedAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  createdAt: DateTime
+
+  """Any other value that exists and is not equal to the given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  id: ID
+
+  """Any other value that exists and is not equal to the given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID]
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string"""
+  id_not_ends_with: ID
+  heading: String
+
+  """Any other value that exists and is not equal to the given value."""
+  heading_not: String
+
+  """All values that are contained in given list."""
+  heading_in: [String]
+
+  """All values that are not contained in given list."""
+  heading_not_in: [String]
+
+  """All values containing the given string."""
+  heading_contains: String
+
+  """All values not containing the given string."""
+  heading_not_contains: String
+
+  """All values starting with the given string."""
+  heading_starts_with: String
+
+  """All values not starting with the given string."""
+  heading_not_starts_with: String
+
+  """All values ending with the given string."""
+  heading_ends_with: String
+
+  """All values not ending with the given string"""
+  heading_not_ends_with: String
+  lastUpdatedLabel: String
+
+  """Any other value that exists and is not equal to the given value."""
+  lastUpdatedLabel_not: String
+
+  """All values that are contained in given list."""
+  lastUpdatedLabel_in: [String]
+
+  """All values that are not contained in given list."""
+  lastUpdatedLabel_not_in: [String]
+
+  """All values containing the given string."""
+  lastUpdatedLabel_contains: String
+
+  """All values not containing the given string."""
+  lastUpdatedLabel_not_contains: String
+
+  """All values starting with the given string."""
+  lastUpdatedLabel_starts_with: String
+
+  """All values not starting with the given string."""
+  lastUpdatedLabel_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastUpdatedLabel_ends_with: String
+
+  """All values not ending with the given string"""
+  lastUpdatedLabel_not_ends_with: String
+  lastUpdated: Date
+
+  """Any other value that exists and is not equal to the given value."""
+  lastUpdated_not: Date
+
+  """All values that are contained in given list."""
+  lastUpdated_in: [Date]
+
+  """All values that are not contained in given list."""
+  lastUpdated_not_in: [Date]
+
+  """All values less than the given value."""
+  lastUpdated_lt: Date
+
+  """All values less than or equal the given value."""
+  lastUpdated_lte: Date
+
+  """All values greater than the given value."""
+  lastUpdated_gt: Date
+
+  """All values greater than or equal the given value."""
+  lastUpdated_gte: Date
+  publishedBy: UserWhereInput
+  updatedBy: UserWhereInput
+  createdBy: UserWhereInput
+  scheduledIn_every: ScheduledOperationWhereInput
+  scheduledIn_some: ScheduledOperationWhereInput
+  scheduledIn_none: ScheduledOperationWhereInput
+}
+
+"""
+The document in stages filter allows specifying a stage entry to cross compare the same document between different stages
+"""
+input TermsAndConditionWhereStageInput {
+  """Logical AND on all given filters."""
+  AND: [TermsAndConditionWhereStageInput!]
+
+  """Logical OR on all given filters."""
+  OR: [TermsAndConditionWhereStageInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [TermsAndConditionWhereStageInput!]
+
+  """Specify the stage to compare with"""
+  stage: Stage
+
+  """
+  This field contains fields which can be set as true or false to specify an internal comparison
+  """
+  compareWithParent: TermsAndConditionWhereComparatorInput
+}
+
+"""References TermsAndCondition record uniquely"""
+input TermsAndConditionWhereUniqueInput {
   id: ID
 }
 

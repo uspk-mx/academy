@@ -7,32 +7,6 @@ import { getBlogPage } from "../graphql/queries/blog"
 import { getBlogPostPage } from "../graphql/queries/blog-post"
 import { getLocale } from "@academy/user-ui/lib/lang"
 
-// // Maps Hygraph RichText raw AST nodes → BlogBlock[]
-// function mapRichTextToBlocks(raw: { children: any[] }): BlogBlock[] {
-//   const blocks: BlogBlock[] = []
-
-//   for (const node of raw.children ?? []) {
-//     const text = node.children?.map((c: any) => c.text ?? "").join("") ?? ""
-
-//     if (node.type === "heading-two" || node.type === "heading") {
-//       blocks.push({ type: "heading", text })
-//     } else if (node.type === "paragraph" && text.trim()) {
-//       blocks.push({ type: "paragraph", text })
-//     } else if (node.type === "bulleted-list" || node.type === "numbered-list") {
-//       const items =
-//         node.children?.map(
-//           (li: any) => li.children?.map((c: any) => c.text ?? "").join("") ?? ""
-//         ) ?? []
-//       blocks.push({ type: "list", items })
-//     } else if (node.type === "block-quote") {
-//       blocks.push({ type: "pullQuote", text })
-//     }
-//     // Images in richtext are handled via BlockImage relation
-//   }
-
-//   return blocks
-// }
-
 export interface BlogPostLabels {
   byLabel: string
   shareAria: string

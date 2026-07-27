@@ -61,6 +61,14 @@ interface HeaderProps {
   }
   auth?: AuthState
   itemsInCart: number
+  login: {
+    label: string
+    href: string
+  }
+  signup: {
+    label: string
+    href: string
+  }
 }
 
 export const Header = ({
@@ -68,6 +76,8 @@ export const Header = ({
   promoBanner,
   auth,
   itemsInCart,
+  login,
+  signup,
 }: HeaderProps) => {
   const { pathname } = useLocation()
   const { lang } = useParams()
@@ -157,18 +167,18 @@ export const Header = ({
                     <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                       <div className="flow-root">
                         <Link
-                          to={`/${lang}/login`}
+                          to={`/${lang}${login.href}`}
                           className="-m-2 block p-2 text-base font-medium text-gray-900"
                         >
-                          Sign in
+                          {login.label}
                         </Link>
                       </div>
                       <div className="flow-root">
                         <Link
-                          to={`/${lang}/signup`}
+                          to={`/${lang}${signup.href}`}
                           className="-m-2 block p-2 text-base font-medium text-gray-900"
                         >
-                          Create account
+                          {signup.label}
                         </Link>
                       </div>
                     </div>
@@ -358,9 +368,9 @@ export const Header = ({
                   <div className="hidden lg:ml-6 lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-4">
                     <Link
                       className="text-base font-medium text-gray-700 hover:text-academy-ink hover:no-underline"
-                      to={`/${lang}/login`}
+                      to={`/${lang}${login.href}`}
                     >
-                      Sign in
+                      {login.label}
                     </Link>
                     <Separator
                       orientation="vertical"
@@ -368,9 +378,9 @@ export const Header = ({
                     />
                     <Link
                       className="text-base font-medium text-gray-700 hover:text-academy-ink hover:no-underline"
-                      to={`/${lang}/signup`}
+                      to={`/${lang}${signup.href}`}
                     >
-                      Create account
+                      {signup.label}
                     </Link>
                   </div>
                 )}

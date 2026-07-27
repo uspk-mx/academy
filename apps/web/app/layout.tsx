@@ -48,6 +48,14 @@ export async function loader({ params, request }: Route.LoaderArgs) {
     siteConfig,
     auth,
     cart,
+    login: {
+      label: siteConfig.loginLabel ?? "",
+      href: siteConfig.loginHref ?? "",
+    },
+    signup: {
+      label: siteConfig.ctaLabel ?? "",
+      href: siteConfig.ctaHref ?? "",
+    },
   }
 }
 
@@ -78,6 +86,8 @@ export default function Layout({
         navLinks={navLinks}
         auth={auth}
         itemsInCart={cart.cart?.items.length ?? 0}
+        login={loaderData.login}
+        signup={loaderData.signup}
       />
       {children}
       <Outlet />

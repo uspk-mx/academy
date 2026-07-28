@@ -4,7 +4,7 @@ import {
   AuthField,
   AuthShell,
   GoogleIcon,
-  MicrosoftIcon,
+  PasswordField,
   SocialButton,
 } from "@academy/user-ui/components/shared/auth-shell"
 import { Checkbox } from "@academy/user-ui/components/ui/checkbox"
@@ -141,10 +141,9 @@ export function SignupPage({
               required
               error={errorText(errors?.fieldErrors?.email, errorLabels)}
             />
-            <AuthField
+            <PasswordField
               label={labels.signupPasswordLabel}
               name="password"
-              type="password"
               autoComplete="new-password"
               placeholder={labels.signupPasswordPlaceholder}
               minLength={8}

@@ -1,10 +1,12 @@
 import { cn } from "@academy/user-ui/lib/utils"
-import type { ComponentProps, ReactNode } from "react"
+import { useState, type ComponentProps, type ReactNode } from "react"
 import { Link } from "react-router"
 import { HardCard, Pill } from "../brand/primitives"
-import { IconCheck } from "@tabler/icons-react"
+import { IconCheck, IconEye, IconEyeClosed } from "@tabler/icons-react"
 import { Label } from "../ui/label"
 import { Input } from "../ui/input"
+import { Button } from "../ui/button"
+import { Tooltip, TooltipTrigger, TooltipContent} from "../ui/tooltip"
 
 function Wordmark({ className }: { className?: string }) {
   return (
@@ -187,6 +189,82 @@ export function AuthField({
         )}
         {...input}
       />
+      {error ? (
+        <p
+          id={`${fieldId}-error`}
+          className="text-label font-semibold text-academy-coral"
+        >
+          {error}
+        </p>
+      ) : (
+        hint && (
+          <p id={`${fieldId}-hint`} className="text-label text-content-muted">
+            {hint}
+          </p>
+        )
+      )}
+    </div>
+  )
+}
+
+export function PasswordField({
+  label,
+  name,
+  hint,
+  labelRight,
+  error,
+  id,
+  ...input
+}: Omit<AuthFieldProps, 'type'>) {
+  const [showPassword, setShowPassword] = useState(false)
+  const fieldId = id ?? name
+  const describedBy = error
+    ? `${fieldId}-error`
+    : hint
+      ? `${fieldId}-hint`
+      : undefined
+
+  return (
+    <div className="flex flex-col gap-1.5">
+      <div className="flex items-baseline justify-between gap-2">
+        <Label htmlFor={fieldId} className="text-sm font-bold">
+          {label}
+        </Label>
+        {labelRight}
+      </div>
+      <div className="relative">
+        <Input
+          id={fieldId}
+          name={name}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy}
+          className={cn(
+            "h-11 rounded-button border-2 border-border-strong bg-surface-card px-4 pr-9 shadow-hard-xs",
+            error && "border-academy-coral"
+          )}
+          type={showPassword ? "text" : "password"}
+          {...input}
+        />
+        <div className="absolute top-3 right-3">
+          <Tooltip>
+            <TooltipTrigger
+              render={
+                <Button
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  size="icon-xs"
+                  variant="ghost"
+                />
+              }
+            >
+              {showPassword ? <IconEye /> : <IconEyeClosed />}
+            </TooltipTrigger>
+            <TooltipContent>
+              {showPassword ? "Hide password" : "Show password"}
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      </div>
       {error ? (
         <p
           id={`${fieldId}-error`}

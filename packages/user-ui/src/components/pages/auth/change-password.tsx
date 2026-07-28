@@ -7,7 +7,7 @@ import type {
 import { IconAlertTriangle, IconCircleCheck } from "@tabler/icons-react"
 import { Form, Link, useParams } from "react-router"
 import { BrandButton } from "../../brand/brand-button"
-import { AuthField, AuthShell } from "../../shared/auth-shell"
+import { AuthShell, PasswordField } from "../../shared/auth-shell"
 
 export interface ChangePasswordPageProps {
   errors?: ChangePasswordActionData
@@ -118,20 +118,18 @@ export function ChangePasswordPage({
         <Form method="post" className="flex flex-col gap-7" noValidate>
           <input type="hidden" name="token" value={token} />
           <div className="flex flex-col gap-4">
-            <AuthField
+            <PasswordField
               label={labels.changePasswordLabel}
               name="password"
-              type="password"
               autoComplete="new-password"
               placeholder={labels.changePasswordPlaceholder}
               minLength={8}
               required
               error={errorText(errors?.fieldErrors?.password, errorLabels)}
             />
-            <AuthField
+            <PasswordField
               label={labels.changeConfirmLabel}
               name="confirmPassword"
-              type="password"
               autoComplete="new-password"
               placeholder={labels.changeConfirmPlaceholder}
               required

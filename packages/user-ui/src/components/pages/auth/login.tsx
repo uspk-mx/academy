@@ -1,3 +1,4 @@
+import { googleOAuthUrl } from "@academy/user-ui/lib/site-urls"
 import type {
   AuthErrorLabels,
   AuthShellLabels,
@@ -5,14 +6,13 @@ import type {
   LoginLabels,
 } from "@academy/user-ui/types/auth"
 import { Form, Link, useParams, useSearchParams } from "react-router"
-import { googleOAuthUrl } from "@academy/user-ui/lib/site-urls"
 import { BrandButton } from "../../brand/brand-button"
 import {
   AuthDivider,
   AuthField,
   AuthShell,
   GoogleIcon,
-  MicrosoftIcon,
+  PasswordField,
   SocialButton,
 } from "../../shared/auth-shell"
 import { Checkbox } from "../../ui/checkbox"
@@ -121,10 +121,9 @@ export function LoginPage({
               required
               error={errorText(errors?.fieldErrors?.identifier, errorLabels)}
             />
-            <AuthField
+            <PasswordField
               label={labels.loginPasswordLabel}
               name="password"
-              type="password"
               autoComplete="current-password"
               placeholder="••••••••"
               required

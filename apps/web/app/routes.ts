@@ -14,6 +14,7 @@ export default [
     route("confirm-account", "./routes/auth/confirm-account.tsx"),
     route("forgot-password", "./routes/auth/forgot-password.tsx"),
     route("change-password", "./routes/auth/change-password.tsx"),
+    route("resources/search", "./routes/resources/search.ts"),
     layout("./layout.tsx", [
       index("routes/home.tsx"),
       route("courses", "./routes/courses/courses.tsx"),

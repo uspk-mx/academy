@@ -3,17 +3,20 @@ import { getInitials } from "@academy/user-ui/lib/string"
 import { cn } from "@academy/user-ui/lib/utils"
 import type { AuthState } from "@academy/user-ui/types/api"
 import {
-  IconFile,
-  IconFolder,
-  IconHomeBitcoin,
-  IconInbox,
   IconMenu3,
   IconShoppingCart,
   IconX,
   IconZoom,
 } from "@tabler/icons-react"
-import { useState } from "react"
-import { Link, useLocation, useParams, useSubmit } from "react-router"
+import { useEffect, useState } from "react"
+import {
+  Link,
+  useFetcher,
+  useLocation,
+  useNavigate,
+  useParams,
+  useSubmit,
+} from "react-router"
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar"
 import { Badge } from "../ui/badge"
 import { Button } from "../ui/button"
@@ -25,7 +28,6 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandShortcut,
 } from "../ui/command"
 import {
   Drawer,
@@ -82,12 +84,40 @@ export const Header = ({
   const { pathname } = useLocation()
   const { lang } = useParams()
   const [openSearch, setOpenSearch] = useState(false)
+  const [query, setQuery] = useState("")
+  const fetcher = useFetcher<{
+    courses: { id: string; title: string; slug: string }[]
+  }>()
+  const navigate = useNavigate()
   const submit = useSubmit()
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const term = query.trim()
+    if (term.length < 2) return
+    const id = setTimeout(() => {
+      fetcher.load(`/${lang}/resources/search?q=${encodeURIComponent(term)}`)
+    }, 300)
+    return () => clearTimeout(id)
+  }, [query, lang])
 
   const sortedNavLinks = navLinks?.sort(
     (linkA, linkB) => linkA.order - linkB.order
   )
+
+  const searchTerm = query.trim().toLowerCase()
+  const pageResults = searchTerm
+    ? sortedNavLinks.filter((link) =>
+        link.label.toLowerCase().includes(searchTerm)
+      )
+    : sortedNavLinks
+  const courseResults = fetcher.data?.courses ?? []
+
+  const runSearch = (to: string) => {
+    setOpenSearch(false)
+    setQuery("")
+    navigate(to)
+  }
 
   const setActiveLinkSate = (link: string) => {
     const base = `/${lang}${link}`
@@ -238,32 +268,44 @@ export const Header = ({
                     </>
                   </Button>
                   <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
-                    <Command>
-                      <CommandInput placeholder="Type a command or search..." />
+                    <Command shouldFilter={false}>
+                      <CommandInput
+                        placeholder="Buscar páginas y cursos..."
+                        value={query}
+                        onValueChange={setQuery}
+                      />
                       <CommandList>
-                        <CommandEmpty>No results found.</CommandEmpty>
-                        <CommandGroup heading="Navigation">
-                          <CommandItem>
-                            <IconHomeBitcoin />
-                            <span>Home</span>
-                            <CommandShortcut>⌘H</CommandShortcut>
-                          </CommandItem>
-                          <CommandItem>
-                            <IconInbox />
-                            <span>Inbox</span>
-                            <CommandShortcut>⌘I</CommandShortcut>
-                          </CommandItem>
-                          <CommandItem>
-                            <IconFile />
-                            <span>Documents</span>
-                            <CommandShortcut>⌘D</CommandShortcut>
-                          </CommandItem>
-                          <CommandItem>
-                            <IconFolder />
-                            <span>Folders</span>
-                            <CommandShortcut>⌘F</CommandShortcut>
-                          </CommandItem>
-                        </CommandGroup>
+                        <CommandEmpty>No hay resultados.</CommandEmpty>
+                        {pageResults.length > 0 && (
+                          <CommandGroup heading="Páginas">
+                            {pageResults.map((page) => (
+                              <CommandItem
+                                key={page.id}
+                                value={page.label}
+                                onSelect={() =>
+                                  runSearch(`/${lang}/${page.href}`)
+                                }
+                              >
+                                {page.label}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        )}
+                        {courseResults.length > 0 && (
+                          <CommandGroup heading="Cursos">
+                            {courseResults.map((course) => (
+                              <CommandItem
+                                key={course.id}
+                                value={course.title}
+                                onSelect={() =>
+                                  runSearch(`/${lang}/courses/${course.slug}`)
+                                }
+                              >
+                                {course.title}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        )}
                       </CommandList>
                     </Command>
                   </CommandDialog>

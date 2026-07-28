@@ -105,3 +105,25 @@ export const defaultPracticeBitesLabels: PracticeBitesLabels = {
   correctAnswerLabel: "Respuesta correcta:",
   noColumns: "Este elemento no tiene columnas para relacionar.",
 }
+
+export const practiceBitesLabels: Record<"es" | "en", PracticeBitesLabels> = {
+  es: defaultPracticeBitesLabels,
+  en: {
+    sectionTitle: "Quick practice",
+    attemptsLabel: "Attempts: {n}",
+    progressLabel: "{answered} of {total}",
+    submit: "Submit answers",
+    submitting: "Submitting…",
+    retry: "Try again",
+    resultSummary: "{correct} of {total} correct · {score}%",
+    perfectHeading: "Perfect! 🎉",
+    trueLabel: "True",
+    falseLabel: "False",
+    textPlaceholder: "Type your answer…",
+    blankPlaceholder: "Blank {n}",
+    columnPlaceholder: "Column {n}",
+    fillInInstruction: "Fill in the blanks",
+    correctAnswerLabel: "Correct answer:",
+    noColumns: "This item has no columns to match.",
+  },
+}

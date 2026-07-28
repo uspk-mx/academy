@@ -2,10 +2,11 @@ import { getEnrollments } from "@academy/courses-api/graphql/student-app/queries
 import { startCourseProgress } from "@academy/courses-api/graphql/student-app/mutations/progress"
 import { StudentCoursesPage } from "@academy/student-ui/components/pages/courses-page"
 import {
-  defaultCoursesPageLabels,
+  coursesPageLabels,
   type StudentCourseCardItem,
 } from "@academy/student-ui/types/courses"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { data, redirect, useFetcher, useParams } from "react-router"
 import { getCourseUrl } from "~/../lib/course-utils"
 import type { Route } from "./+types/courses"
@@ -38,13 +39,15 @@ export async function loader({ request, params }: Route.LoaderArgs) {
         imageUrl: course.featuredImage,
         progressPercentage,
         // `startedAt` is an empty string (not null) before the first visit.
-        isStarted: Boolean(course.progress?.startedAt) || progressPercentage > 0,
+        isStarted:
+          Boolean(course.progress?.startedAt) || progressPercentage > 0,
         isUnlocked: course.isUnlocked !== false,
         hasCertificate: (course.certificates?.length ?? 0) > 0,
         durationMinutes: course.duration ?? 0,
         instructors:
-          course.instructors?.flatMap((i) => (i?.fullName ? [i.fullName] : [])) ??
-          [],
+          course.instructors?.flatMap((i) =>
+            i?.fullName ? [i.fullName] : []
+          ) ?? [],
         prerequisiteTitles:
           course.prerequisites?.flatMap((p) => (p?.title ? [p.title] : [])) ??
           [],
@@ -56,9 +59,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
   return {
     items,
-    // TODO(hygraph): swap for a StudentCoursesPage model, same pattern as the
-    // marketing loaders (defaults keep the page working meanwhile).
-    labels: defaultCoursesPageLabels,
+    labels: pickLocale(params.lang, coursesPageLabels),
   }
 }
 

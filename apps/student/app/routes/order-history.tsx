@@ -1,12 +1,13 @@
 import { getMyOrders } from "@academy/courses-api/graphql/student-app/queries/orders"
 import { StudentOrderHistoryPage } from "@academy/student-ui/components/pages/order-history-page"
 import {
-  defaultOrderHistoryPageLabels,
+  orderHistoryPageLabels,
   type OrderItemType,
   type OrderStatus,
   type StudentOrder,
 } from "@academy/student-ui/types/orders"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { useParams } from "react-router"
 import type { Route } from "./+types/order-history"
 
@@ -50,7 +51,7 @@ function toItemType(value: string): OrderItemType {
  * abandoned before reaching Stripe are excluded, so the history has no phantom
  * pending rows.
  */
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const result = await getMyOrders(request)
   const rows = result?.myOrders ?? []
 
@@ -81,9 +82,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   return {
     orders,
-    // TODO(hygraph): swap for a StudentOrderHistoryPage model, same pattern as
-    // the marketing loaders (defaults keep the page working meanwhile).
-    labels: defaultOrderHistoryPageLabels,
+    labels: pickLocale(params.lang, orderHistoryPageLabels),
   }
 }
 

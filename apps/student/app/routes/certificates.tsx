@@ -1,10 +1,11 @@
 import { getMyCertificates } from "@academy/courses-api/graphql/student-app/queries/certificates"
 import { StudentCertificatesPage } from "@academy/student-ui/components/pages/certificates-page"
 import {
-  defaultCertificatesLabels,
+  certificatesLabels,
   type CertificateView,
 } from "@academy/student-ui/types/certificate"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { useParams } from "react-router"
 import type { Route } from "./+types/certificates"
 
@@ -25,7 +26,7 @@ export function meta() {
  * `myCertificates` lazily issues one credential per completed course, so the
  * list is exactly the courses the student has finished. Newest first.
  */
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const result = await getMyCertificates(request)
   const rows = result?.myCertificates ?? []
 
@@ -55,9 +56,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   return {
     items,
     highlightCourseId,
-    // TODO(hygraph): swap for a StudentCertificatesPage model, same pattern as
-    // the marketing loaders (defaults keep the page working meanwhile).
-    labels: defaultCertificatesLabels,
+    labels: pickLocale(params.lang, certificatesLabels),
   }
 }
 

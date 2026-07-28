@@ -2,14 +2,19 @@ import { submitQuizAttempt } from "@academy/courses-api/graphql/student-app/muta
 import { getStudentCourse } from "@academy/courses-api/graphql/student-app/queries/courses"
 import { getQuizForAttempt } from "@academy/courses-api/graphql/student-app/queries/quiz"
 import { StudentQuizPage } from "@academy/student-ui/components/pages/quiz-page"
-import { defaultCourseViewerLabels } from "@academy/student-ui/types/course-viewer"
 import {
-  defaultQuizPageLabels,
+  courseViewerLabels,
+  type CourseViewerLabels,
+} from "@academy/student-ui/types/course-viewer"
+import {
+  quizPageLabels,
+  type QuizPageLabels,
   type QuizQuestionType,
   type QuizResultView,
   type QuizView,
 } from "@academy/student-ui/types/quiz"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { useState } from "react"
 import {
   data,
@@ -119,8 +124,8 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     quiz,
     outline,
     certificateHref,
-    labels: defaultQuizPageLabels,
-    viewerLabels: defaultCourseViewerLabels,
+    labels: pickLocale(params.lang, quizPageLabels),
+    viewerLabels: pickLocale(params.lang, courseViewerLabels),
   }
 }
 
@@ -236,9 +241,11 @@ function QuizRunner({
 }: {
   quiz: QuizView
   outline: React.ComponentProps<typeof StudentQuizPage>["outline"]
-  certificateHref: React.ComponentProps<typeof StudentQuizPage>["certificateHref"]
-  labels: typeof defaultQuizPageLabels
-  viewerLabels: typeof defaultCourseViewerLabels
+  certificateHref: React.ComponentProps<
+    typeof StudentQuizPage
+  >["certificateHref"]
+  labels: QuizPageLabels
+  viewerLabels: CourseViewerLabels
   coursesHref: string
   onRetry: () => void
 }) {

@@ -1,10 +1,11 @@
 import { getMyQuizAttempts } from "@academy/courses-api/graphql/student-app/queries/quiz-attempts"
 import { StudentQuizAttemptsPage } from "@academy/student-ui/components/pages/quiz-attempts-page"
 import {
-  defaultQuizAttemptsPageLabels,
+  quizAttemptsPageLabels,
   type StudentQuizAttempt,
 } from "@academy/student-ui/types/quiz-attempts"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { useParams } from "react-router"
 import type { Route } from "./+types/quiz-attempts"
 
@@ -26,7 +27,7 @@ export function meta() {
  * `score` as EARNED MARKS, so the percentage is derived here against the sum of
  * the quiz's question marks and compared with `passingGrade`.
  */
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const result = await getMyQuizAttempts(request)
   const rows = result?.myQuizAttempts ?? []
 
@@ -79,9 +80,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   return {
     items,
-    // TODO(hygraph): swap for a StudentQuizAttemptsPage model, same pattern as
-    // the marketing loaders (defaults keep the page working meanwhile).
-    labels: defaultQuizAttemptsPageLabels,
+    labels: pickLocale(params.lang, quizAttemptsPageLabels),
   }
 }
 

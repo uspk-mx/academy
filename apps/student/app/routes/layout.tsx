@@ -1,22 +1,28 @@
 import { getMyCart } from "@academy/courses-api/graphql/student-app/queries/cart"
 import { getMe } from "@academy/courses-api/graphql/queries/me"
 import {
-  defaultStudentLayoutLabels,
   StudentHeader,
   StudentMobileNav,
   StudentSidebar,
   type StudentUser,
 } from "@academy/student-ui/components"
-import type { StudentCartView } from "@academy/student-ui/types/layout"
+import {
+  studentLayoutLabels,
+  type StudentCartView,
+} from "@academy/student-ui/types/layout"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
 import { marketingUrlFor } from "@academy/user-ui/lib/site-urls"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { Outlet, useParams, useSubmit } from "react-router"
 import type { Route } from "./+types/layout"
 
 export const middleware = [authMiddleware]
 
 export async function loader({ request, params }: Route.LoaderArgs) {
-  const [me, cartResult] = await Promise.all([getMe(request), getMyCart(request)])
+  const [me, cartResult] = await Promise.all([
+    getMe(request),
+    getMyCart(request),
+  ])
   const user = me?.me
 
   const studentUser: StudentUser | null = user
@@ -58,9 +64,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     cart,
     // The cart/checkout pages live on the apex/web app (cross-origin in prod).
     cartHref: marketingUrlFor(params.lang, "cart"),
-    // TODO(hygraph): swap for a StudentLayoutPage model, same pattern as the
-    // marketing loaders (defaults keep the shell working meanwhile).
-    labels: defaultStudentLayoutLabels,
+    labels: pickLocale(params.lang, studentLayoutLabels),
     // Company admins carry the "business" role and get the team-oriented shell;
     // enterprise learners keep the student shell even though they have a company.
     isBusinessUser: user?.role === "business",

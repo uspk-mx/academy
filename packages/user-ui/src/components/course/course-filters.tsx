@@ -69,13 +69,15 @@ export function CourseFilters({
         <h2 className="text-card-title font-bold tracking-tight-brand">
           Filtros
         </h2>
-        <button
-          type="button"
-          onClick={onClear}
-          className="text-sm font-semibold text-content-muted underline underline-offset-4 hover:text-content-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-academy-blue"
-        >
-          Limpiar
-        </button>
+        {value.selected && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="text-sm font-semibold text-content-muted underline underline-offset-4 hover:text-content-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-academy-blue"
+          >
+            Limpiar
+          </button>
+        )}
       </div>
 
       {groups.map((group) => (
@@ -83,41 +85,45 @@ export function CourseFilters({
           key={group.id}
           className="mt-stack-lg border-t border-border-subtle pt-stack"
         >
-          <legend className="pb-stack text-label font-bold tracking-tight-brand uppercase">
-            {group.label}
-          </legend>
-          <ul className="flex flex-col gap-3">
-            {group.options.map((option) => {
-              const inputId = `${group.id}-${option.id}`
-              const checked = (value.selected[group.id] ?? []).includes(
-                option.id
-              )
+          {group && (
+            <>
+              <legend className="pb-stack text-label font-bold tracking-tight-brand uppercase">
+                {group.label}
+              </legend>
+              <ul className="flex flex-col gap-3">
+                {group.options.map((option) => {
+                  const inputId = `${group.id}-${option.id}`
+                  const checked = (value.selected[group.id] ?? []).includes(
+                    option.id
+                  )
 
-              return (
-                <li key={option.id} className="flex items-center gap-3">
-                  <Checkbox
-                    id={inputId}
-                    checked={checked}
-                    onCheckedChange={(state) =>
-                      toggleOption(group.id, option.id, state === true)
-                    }
-                    className="border-2 border-border-strong"
-                  />
-                  <label
-                    htmlFor={inputId}
-                    className="flex-1 text-sm font-medium"
-                  >
-                    {option.label}
-                  </label>
-                  {typeof option.count === "number" && (
-                    <span className="text-sm text-content-muted">
-                      {option.count}
-                    </span>
-                  )}
-                </li>
-              )
-            })}
-          </ul>
+                  return (
+                    <li key={option.id} className="flex items-center gap-3">
+                      <Checkbox
+                        id={inputId}
+                        checked={checked}
+                        onCheckedChange={(state) =>
+                          toggleOption(group.id, option.id, state === true)
+                        }
+                        className="border-2 border-border-strong"
+                      />
+                      <label
+                        htmlFor={inputId}
+                        className="flex-1 text-sm font-medium"
+                      >
+                        {option.label}
+                      </label>
+                      {typeof option.count === "number" && (
+                        <span className="text-sm text-content-muted">
+                          {option.count}
+                        </span>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            </>
+          )}
         </fieldset>
       ))}
 

@@ -99,3 +99,43 @@ export const defaultQuizAttemptsPageLabels: QuizAttemptsPageLabels = {
   noResultsDescription: "Intenta con otro filtro para ver más resultados.",
   clearFilterCta: "Ver todos",
 }
+
+export const quizAttemptsPageLabels: Record<
+  "es" | "en",
+  QuizAttemptsPageLabels
+> = {
+  es: defaultQuizAttemptsPageLabels,
+  en: {
+    pageTitle: "My Quiz Attempts",
+    totalSuffixSingular: "attempt",
+    totalSuffixPlural: "attempts",
+    passRateSuffix: "Pass rate",
+    statsTotal: "Total",
+    statsPassed: "Passed",
+    statsFailed: "Failed",
+    statsPassRate: "Pass %",
+    statsAverage: "Average",
+    statsBest: "Best score",
+    filterLabel: "Filter:",
+    filterAll: "All",
+    filterPassed: "Passed",
+    filterFailed: "Failed",
+    resultsSingular: "result",
+    resultsPlural: "results",
+    passedBadge: "Passed",
+    failedBadge: "Failed",
+    scoreLabel: "Score",
+    marksLabel: "Grade",
+    questionsLabel: "Questions",
+    attemptNumberLabel: "Attempt {n}",
+    attemptNumberOfLabel: "Attempt {n} of {max}",
+    passingGradeLabel: "Passing grade",
+    emptyTitle: "No quiz attempts yet",
+    emptyDescription:
+      "You haven't taken any quizzes yet. Start learning and test your knowledge!",
+    emptyCta: "View my courses",
+    noResultsTitle: "No attempts match that filter",
+    noResultsDescription: "Try a different filter to see more results.",
+    clearFilterCta: "View all",
+  },
+}

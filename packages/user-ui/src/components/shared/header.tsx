@@ -2,6 +2,7 @@ import { studentUrlFor } from "@academy/user-ui/lib/site-urls"
 import { getInitials } from "@academy/user-ui/lib/string"
 import { cn } from "@academy/user-ui/lib/utils"
 import type { AuthState } from "@academy/user-ui/types/api"
+import type { HeaderLabels } from "@academy/user-ui/types/header"
 import {
   IconMenu3,
   IconShoppingCart,
@@ -63,6 +64,7 @@ interface HeaderProps {
   }
   auth?: AuthState
   itemsInCart: number
+  labels: HeaderLabels
   login: {
     label: string
     href: string
@@ -78,6 +80,7 @@ export const Header = ({
   promoBanner,
   auth,
   itemsInCart,
+  labels,
   login,
   signup,
 }: HeaderProps) => {
@@ -154,7 +157,7 @@ export const Header = ({
                       size="icon"
                     >
                       <>
-                        <span className="sr-only">Close menu</span>
+                        <span className="sr-only">{labels.closeMenu}</span>
                         <IconMenu3 aria-hidden="true" className="size-6" />
                       </>
                     </Button>
@@ -171,7 +174,9 @@ export const Header = ({
                             size="icon-sm"
                           >
                             <>
-                              <span className="sr-only">Close menu</span>
+                              <span className="sr-only">
+                                {labels.closeMenu}
+                              </span>
                               <IconX aria-hidden="true" />
                             </>
                           </Button>
@@ -263,21 +268,21 @@ export const Header = ({
                     size="icon"
                   >
                     <>
-                      <span className="sr-only">Search</span>
+                      <span className="sr-only">{labels.search.trigger}</span>
                       <IconZoom aria-hidden="true" className="size-6" />
                     </>
                   </Button>
                   <CommandDialog open={openSearch} onOpenChange={setOpenSearch}>
                     <Command shouldFilter={false}>
                       <CommandInput
-                        placeholder="Buscar páginas y cursos..."
+                        placeholder={labels.search.placeholder}
                         value={query}
                         onValueChange={setQuery}
                       />
                       <CommandList>
-                        <CommandEmpty>No hay resultados.</CommandEmpty>
+                        <CommandEmpty>{labels.search.empty}</CommandEmpty>
                         {pageResults.length > 0 && (
-                          <CommandGroup heading="Páginas">
+                          <CommandGroup heading={labels.search.pagesGroup}>
                             {pageResults.map((page) => (
                               <CommandItem
                                 key={page.id}
@@ -292,7 +297,7 @@ export const Header = ({
                           </CommandGroup>
                         )}
                         {courseResults.length > 0 && (
-                          <CommandGroup heading="Cursos">
+                          <CommandGroup heading={labels.search.coursesGroup}>
                             {courseResults.map((course) => (
                               <CommandItem
                                 key={course.id}
@@ -328,7 +333,7 @@ export const Header = ({
                       className="size-6 shrink-0 text-academy-ink group-hover:text-academy-ink/50"
                     />
                   </Button>
-                  <span className="sr-only">items in cart, view bag</span>
+                  <span className="sr-only">{labels.cartAria}</span>
                   {itemsInCart > 0 && (
                     <Badge className="absolute -top-4 -right-3 size-4.5 rounded-full bg-academy-coral text-[10px]">
                       {itemsInCart}
@@ -370,12 +375,12 @@ export const Header = ({
                             />
                           }
                         >
-                          Mi Aprendizaje
+                          {labels.userMenu.learning}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           render={<Link to={`/${lang}/cart`} />}
                         >
-                          Mi Carrito
+                          {labels.userMenu.cart}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           render={
@@ -387,7 +392,7 @@ export const Header = ({
                             />
                           }
                         >
-                          Mi Perfil
+                          {labels.userMenu.profile}
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />
@@ -401,7 +406,7 @@ export const Header = ({
                             })
                           }
                         >
-                          Log out
+                          {labels.userMenu.logout}
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                     </DropdownMenuContent>

@@ -2,11 +2,12 @@ import { updateUserProfile } from "@academy/courses-api/graphql/student-app/muta
 import { getUserProfile } from "@academy/courses-api/graphql/student-app/queries/users"
 import { StudentProfilePage } from "@academy/student-ui/components/pages/profile-page"
 import {
-  defaultProfilePageLabels,
+  profilePageLabels,
   type ProfileActionData,
   type StudentProfile,
 } from "@academy/student-ui/types/profile"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { data, useNavigation } from "react-router"
 import { uploadFile } from "~/../lib/upload"
 import type { Route } from "./+types/profile"
@@ -24,7 +25,7 @@ export function meta() {
   ]
 }
 
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
   const result = await getUserProfile(request)
   const me = result?.getProfile
 
@@ -44,7 +45,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     updatedAt: me.updatedAt ?? null,
   }
 
-  return { profile, labels: defaultProfilePageLabels }
+  return { profile, labels: pickLocale(params.lang, profilePageLabels) }
 }
 
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024

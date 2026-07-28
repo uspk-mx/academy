@@ -7,15 +7,16 @@ import { getPracticeBitesByLesson } from "@academy/courses-api/graphql/student-a
 import { StudentLessonPage } from "@academy/student-ui/components/pages/lesson-page"
 import { StudentPracticeBites } from "@academy/student-ui/components/practice-bites/practice-bites"
 import {
-  defaultCourseViewerLabels,
+  courseViewerLabels,
   type LessonView,
 } from "@academy/student-ui/types/course-viewer"
 import {
-  defaultPracticeBitesLabels,
+  practiceBitesLabels,
   type PracticeBiteItemType,
   type PracticeBiteView,
 } from "@academy/student-ui/types/practice-bites"
 import { authMiddleware } from "@academy/user-ui/middleware/auth"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { useState } from "react"
 import { data, redirect, useFetcher, useParams } from "react-router"
 import type { action as practiceBiteAction } from "../../practice-bite"
@@ -141,9 +142,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     practiceBite,
     certificateHref,
     ...findNeighbours(outline, lesson.id),
-    // TODO(hygraph): swap for a CourseViewer model, same pattern as the
-    // marketing loaders (defaults keep the page working meanwhile).
-    labels: defaultCourseViewerLabels,
+    labels: pickLocale(params.lang, courseViewerLabels),
   }
 }
 
@@ -162,7 +161,10 @@ export async function action({ request, params, context }: Route.ActionArgs) {
   try {
     const { setCookies } = completed
       ? await revertLessonProgress({ request, variables: { lessonId } })
-      : await markLessonCompleted({ request, variables: { input: { lessonId } } })
+      : await markLessonCompleted({
+          request,
+          variables: { input: { lessonId } },
+        })
 
     // Engagement signal: only when marking complete, not when reverting.
     if (!completed) {
@@ -264,7 +266,7 @@ function PracticeBitesRunner({
   return (
     <StudentPracticeBites
       bite={bite}
-      labels={defaultPracticeBitesLabels}
+      labels={pickLocale(lang, practiceBitesLabels)}
       result={result}
       isSubmitting={fetcher.state !== "idle"}
       onSubmit={(payload) =>

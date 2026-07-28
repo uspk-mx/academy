@@ -5,6 +5,7 @@ import {
   TooltipTrigger,
 } from "@academy/user-ui/components/ui/tooltip"
 import { cn } from "@academy/user-ui/lib/utils"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import {
   IconAlertTriangle,
   IconMaximize,
@@ -52,7 +53,27 @@ export const defaultVideoPlayerLabels: VideoPlayerLabels = {
   pictureInPicture: "Picture in picture",
   fullscreen: "Pantalla completa",
   exitFullscreen: "Salir de pantalla completa",
-  loadError: "No pudimos cargar el video. Recarga la página o inténtalo más tarde.",
+  loadError:
+    "No pudimos cargar el video. Recarga la página o inténtalo más tarde.",
+}
+
+export const videoPlayerLabels: Record<"es" | "en", VideoPlayerLabels> = {
+  es: defaultVideoPlayerLabels,
+  en: {
+    play: "Play",
+    pause: "Pause",
+    back10: "Back 10 s",
+    forward10: "Forward 10 s",
+    mute: "Mute",
+    unmute: "Unmute",
+    volume: "Volume",
+    speed: "Speed",
+    pictureInPicture: "Picture in picture",
+    fullscreen: "Fullscreen",
+    exitFullscreen: "Exit fullscreen",
+    loadError:
+      "We couldn't load the video. Reload the page or try again later.",
+  },
 }
 
 export interface VideoPlayerProps {
@@ -64,6 +85,7 @@ export interface VideoPlayerProps {
   subtitlesSrc?: string
   poster?: string
   labels?: VideoPlayerLabels
+  lang?: string
   className?: string
   /** Fires once the video reaches the end — the route decides what that means. */
   onEnded?: () => void
@@ -104,7 +126,8 @@ export function VideoPlayer({
   duration: knownDuration,
   subtitlesSrc,
   poster,
-  labels = defaultVideoPlayerLabels,
+  lang,
+  labels = pickLocale(lang, videoPlayerLabels),
   className,
   onEnded,
 }: VideoPlayerProps) {
@@ -380,7 +403,10 @@ export function VideoPlayer({
             />
 
             <div className="flex items-center gap-1 text-white">
-              <ControlButton label={labels.back10} onClick={() => skip(-SKIP_SECONDS)}>
+              <ControlButton
+                label={labels.back10}
+                onClick={() => skip(-SKIP_SECONDS)}
+              >
                 <IconPlayerSkipBack aria-hidden className="size-5" />
               </ControlButton>
               <ControlButton
@@ -417,7 +443,9 @@ export function VideoPlayer({
                     value={[isMuted ? 0 : volume * 100]}
                     max={100}
                     onValueChange={(value) =>
-                      handleVolume(Array.isArray(value) ? value[0] : Number(value))
+                      handleVolume(
+                        Array.isArray(value) ? value[0] : Number(value)
+                      )
                     }
                     className="w-20"
                   />
@@ -470,7 +498,9 @@ export function VideoPlayer({
                 </ControlButton>
 
                 <ControlButton
-                  label={isFullscreen ? labels.exitFullscreen : labels.fullscreen}
+                  label={
+                    isFullscreen ? labels.exitFullscreen : labels.fullscreen
+                  }
                   onClick={toggleFullscreen}
                 >
                   {isFullscreen ? (

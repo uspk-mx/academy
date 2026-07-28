@@ -4,8 +4,10 @@ import { getMe } from "@academy/courses-api/graphql/queries/me"
 import { Header } from "@academy/user-ui/components"
 import { Footer } from "@academy/user-ui/components/shared/footer"
 import type { AuthState } from "@academy/user-ui/types/api"
+import { headerLabels } from "@academy/user-ui/types/header"
+import { pickLocale } from "@academy/user-ui/lib/lang"
 import { type ReactNode, useEffect, useRef } from "react"
-import { Outlet } from "react-router"
+import { Outlet, useParams } from "react-router"
 import type { Route } from "./+types/layout"
 import { usePostHog } from "@posthog/react"
 
@@ -49,6 +51,7 @@ export default function Layout({
   children,
 }: Route.ComponentProps & { children: ReactNode }) {
   const { navLinks, auth, siteConfig, footerColumns, cart } = loaderData
+  const { lang } = useParams()
   const posthog = usePostHog()
 
   const userId = auth.status === "authenticated" ? auth.user.id : null
@@ -71,6 +74,7 @@ export default function Layout({
         navLinks={navLinks}
         auth={auth}
         itemsInCart={cart.cart?.items.length ?? 0}
+        labels={pickLocale(lang, headerLabels)}
         login={loaderData.login}
         signup={loaderData.signup}
       />

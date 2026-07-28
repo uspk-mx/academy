@@ -33,6 +33,13 @@ export function isSupportedLang(
   return SUPPORTED_LANGS.includes(value as SupportedLang)
 }
 
+export function pickLocale<T>(
+  lang: string | undefined,
+  byLang: { es: T; en?: T }
+): T {
+  return lang === "en" && byLang.en ? byLang.en : byLang.es
+}
+
 export function getPreferredLang(request: Request): SupportedLang {
   const cookie = request.headers.get("Cookie")
 

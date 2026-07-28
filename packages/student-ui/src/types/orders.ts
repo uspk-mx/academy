@@ -7,11 +7,7 @@
  */
 
 export type OrderStatus =
-  | "completed"
-  | "pending"
-  | "failed"
-  | "refunded"
-  | "partially_refunded"
+  "completed" | "pending" | "failed" | "refunded" | "partially_refunded"
 export type OrderItemType = "COURSE" | "BUNDLE" | "SUBSCRIPTION"
 
 export interface StudentOrderItem {
@@ -178,4 +174,70 @@ export const defaultOrderHistoryPageLabels: OrderHistoryPageLabels = {
   noResultsWithQuery: "No hay órdenes que coincidan con «{query}».",
   noResultsDescription: "Intenta con otro filtro para ver más resultados.",
   clearFiltersCta: "Limpiar filtros",
+}
+
+export const orderHistoryPageLabels: Record<
+  "es" | "en",
+  OrderHistoryPageLabels
+> = {
+  es: defaultOrderHistoryPageLabels,
+  en: {
+    pageTitle: "Order History",
+    totalSuffixSingular: "order",
+    totalSuffixPlural: "orders",
+    spentSuffix: "Total spent",
+    statsTotal: "Total Orders",
+    statsSpent: "Total Spent",
+    statsCourses: "Courses",
+    statsBundles: "Bundles",
+    statsSubscriptions: "Subscriptions",
+    filterLabel: "Filter:",
+    filterAll: "All",
+    filterCompleted: "Paid",
+    filterPending: "Pending",
+    filterFailed: "Failed",
+    filterRefunded: "Refunded",
+    searchPlaceholder: "Search by course or order number…",
+    searchAria: "Search orders",
+    resultsSingular: "result",
+    resultsPlural: "results",
+    statusCompleted: "Paid",
+    statusPending: "Pending",
+    statusFailed: "Failed",
+    statusRefunded: "Refunded",
+    statusPartiallyRefunded: "Partially refunded",
+    refundedNoticeFull: "You were refunded {amount}.",
+    refundedNoticePartial: "You were refunded {amount} of this order.",
+    refundedAccessRevoked: "Access to the courses in this order was revoked.",
+    totalLabel: "Total",
+    paymentMethodLabel: "Payment method",
+    cardFormat: "{brand} ····{last4}",
+    paymentMethodUnknown: "Not available",
+    itemsSingular: "item",
+    itemsPlural: "items",
+    noItemsPending: "The details will appear once payment is confirmed.",
+    noItemsFailed: "The payment didn't go through, no items were recorded.",
+    receiptCta: "View receipt",
+    voucherTitle: "OXXO payment slip",
+    voucherHelp:
+      "Show this reference at any OXXO store to complete your payment.",
+    voucherReferenceLabel: "Reference",
+    voucherCopyCta: "Copy",
+    voucherCopiedCta: "Copied!",
+    voucherOpenCta: "View slip",
+    voucherExpiresLabel: "Expires on {date}",
+    voucherExpiredLabel: "This slip has expired.",
+    orderReference: "Order",
+    typeCourse: "Course",
+    typeBundle: "Bundle",
+    typeSubscription: "Subscription",
+    emptyTitle: "No orders yet",
+    emptyDescription:
+      "When you buy a course or a bundle, it'll show up here with its receipt.",
+    emptyCta: "Explore courses",
+    noResultsTitle: "No orders found",
+    noResultsWithQuery: 'No orders match "{query}".',
+    noResultsDescription: "Try a different filter to see more results.",
+    clearFiltersCta: "Clear filters",
+  },
 }

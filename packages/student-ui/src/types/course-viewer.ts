@@ -131,3 +131,42 @@ export const defaultCourseViewerLabels: CourseViewerLabels = {
       "No pudimos cargar el video. Recarga la página o inténtalo más tarde.",
   },
 }
+
+export const courseViewerLabels: Record<"es" | "en", CourseViewerLabels> = {
+  es: defaultCourseViewerLabels,
+  en: {
+    backToCourses: "My courses",
+    contentsTitle: "Course contents",
+    progressSummary: "{done} of {total} completed",
+    lessonLabel: "Lesson",
+    quizLabel: "Quiz",
+    previous: "Previous",
+    next: "Next",
+    markComplete: "Mark as completed",
+    markedComplete: "Completed",
+    savingComplete: "Saving…",
+    attachmentsTitle: "Lesson materials",
+    attachmentsEmpty: "This lesson has no additional materials.",
+    downloadCta: "Download",
+    noVideo: "This lesson has no video.",
+    noContent: "This lesson has no content yet.",
+    completedBadge: "Completed",
+    certificateReady: "Course completed!",
+    viewCertificate: "View certificate",
+    video: {
+      play: "Play",
+      pause: "Pause",
+      back10: "Back 10 s",
+      forward10: "Forward 10 s",
+      mute: "Mute",
+      unmute: "Unmute",
+      volume: "Volume",
+      speed: "Speed",
+      pictureInPicture: "Picture in picture",
+      fullscreen: "Fullscreen",
+      exitFullscreen: "Exit fullscreen",
+      loadError:
+        "We couldn't load the video. Reload the page or try again later.",
+    },
+  },
+}

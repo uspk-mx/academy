@@ -1,3 +1,4 @@
+import { LanguageSwitcher } from "@academy/user-ui/components/shared/language-switcher"
 import {
   Avatar,
   AvatarFallback,
@@ -12,8 +13,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@academy/user-ui/components/ui/dropdown-menu"
-import { Skeleton } from "@academy/user-ui/components/ui/skeleton"
 import { Label } from "@academy/user-ui/components/ui/label"
+import { Skeleton } from "@academy/user-ui/components/ui/skeleton"
 import { cn } from "@academy/user-ui/lib/utils"
 import {
   IconChevronDown,
@@ -163,7 +164,7 @@ export const StudentHeader = ({
                 render={
                   <Button
                     variant="ghost"
-                    className="h-auto gap-2 p-0 hover:bg-transparent"
+                    className="h-auto gap-2 p-0 hover:bg-transparent rounded-card"
                     aria-label={labels.header.userMenuAria}
                   >
                     <>
@@ -240,6 +241,7 @@ export const StudentHeader = ({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

@@ -55,8 +55,7 @@ export interface CertificatesPageLabels {
 
 export const defaultCertificatesLabels: CertificatesPageLabels = {
   pageTitle: "Mis Certificados",
-  pageSubtitle:
-    "Descarga los certificados de los cursos que has completado.",
+  pageSubtitle: "Descarga los certificados de los cursos que has completado.",
   statsTotal: "Certificados",
   statsThisMonth: "Este mes",
   issuedOn: "Emitido el",
@@ -76,5 +75,33 @@ export const defaultCertificatesLabels: CertificatesPageLabels = {
     credentialLabel: "ID de credencial",
     signatureLabel: "Dirección Académica",
     brand: "Uspk Academy",
+  },
+}
+
+export const certificatesLabels: Record<"es" | "en", CertificatesPageLabels> = {
+  es: defaultCertificatesLabels,
+  en: {
+    pageTitle: "My Certificates",
+    pageSubtitle: "Download the certificates for the courses you've completed.",
+    statsTotal: "Certificates",
+    statsThisMonth: "This month",
+    issuedOn: "Issued on",
+    download: "Download PDF",
+    preview: "Preview",
+    generating: "Generating…",
+    generationError: "The PDF could not be generated",
+    emptyTitle: "You don't have any certificates yet",
+    emptyDescription:
+      "Complete a course to earn your certificate of completion.",
+    emptyCta: "Go to my courses",
+    doc: {
+      eyebrow: "Certificate of completion",
+      awardedTo: "This certificate is awarded to",
+      forCompleting: "for successfully completing the course",
+      dateLabel: "Issue date",
+      credentialLabel: "Credential ID",
+      signatureLabel: "Academic Director",
+      brand: "Uspk Academy",
+    },
   },
 }

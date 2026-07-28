@@ -70,10 +70,14 @@ export async function action({
     for (const cookie of setCookies) headers.append("Set-Cookie", cookie)
     return redirect(postAuthTarget(request, params.lang), { headers })
   } catch (error: any) {
+    const message = String(error?.message ?? "")
     // The API blocks unconfirmed accounts with a specific message; surface the
     // resend affordance instead of a generic error.
-    if (/confirmar tu correo/i.test(String(error?.message ?? ""))) {
+    if (/confirmar tu correo/i.test(message)) {
       return { needsConfirmation: true, identifier }
+    }
+    if (/registrada con/i.test(message)) {
+      return { formError: "socialAuth" }
     }
     return { formError: "invalidCredentials" }
   }

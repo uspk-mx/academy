@@ -123,6 +123,7 @@ export const defaultAuthLabels: AuthLabels = {
     termsRequired: "Acepta los términos para crear tu cuenta.",
     passwordMismatch: "Las contraseñas no coinciden.",
     invalidCredentials: "Usuario o contraseña incorrectos.",
+    socialAuth: "Esta cuenta usa Google. Inicia sesión con Google.",
     invalidLink: "El enlace no es válido o ya expiró. Solicita uno nuevo.",
     generic: "Algo salió mal. Inténtalo de nuevo más tarde o contacta a soporte.",
   },

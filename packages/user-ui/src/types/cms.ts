@@ -160,6 +160,7 @@ export interface TeamMember {
   role?: string
   photo?: CmsImage
   tone: BrandTone
+  order?: number;
 }
 
 export interface TeamSectionContent {

@@ -209,22 +209,6 @@ export default function Checkout({ params, loaderData }: Route.ComponentProps) {
       label: paymentLabels.oxxoMethodLabel,
       iconUrl: "/img/payments/oxxo.svg",
     },
-    // { id: "paypal", label: "PayPal", iconUrl: "/img/payments/paypal.svg" },
-    // {
-    //   id: "apple-pay",
-    //   label: "Apple Pay",
-    //   iconUrl: "/img/payments/apple-pay.svg",
-    // },
-    // {
-    //   id: "google-pay",
-    //   label: "Google Pay",
-    //   iconUrl: "/img/payments/google-pay.svg",
-    // },
-    // {
-    //   id: "mercado-pago",
-    //   label: "Mercado Pago",
-    //   iconUrl: "/img/payments/mercado-pago.svg",
-    // },
   ]
 
   // Country names localize automatically via Intl — no CMS field needed.

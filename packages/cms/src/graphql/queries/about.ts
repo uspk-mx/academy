@@ -41,6 +41,7 @@ const ABOUT_PAGE_QUERY = graphql(`
         name
         role
         tone
+        order
         photo {
           fileName
           id

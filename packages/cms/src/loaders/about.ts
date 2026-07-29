@@ -78,6 +78,7 @@ export async function loadAboutPage(lang: string): Promise<AboutPageData> {
           },
           role: member.role,
           tone: member.tone,
+          order: member.order
         })) as unknown as TeamMember[],
       },
     },

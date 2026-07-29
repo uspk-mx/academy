@@ -65,11 +65,8 @@ export function AboutPage({ content, ctaBanner }: AboutPageProps) {
         </section>
       </div>
 
-          <Separator className="bg-academy-ink h-0.5!" />
-      <section
-        aria-labelledby="audience-heading"
-        className="py-section-y"
-      >
+      <Separator className="h-0.5! bg-academy-ink" />
+      <section aria-labelledby="audience-heading" className="py-section-y">
         <div className="mx-auto grid max-w-page items-center gap-stack-lg px-page-x md:grid-cols-[1fr_1.5fr]">
           <div>
             <h2
@@ -101,9 +98,11 @@ export function AboutPage({ content, ctaBanner }: AboutPageProps) {
           {content.team.title}
         </h2>
         <div className="mx-auto mt-stack-lg grid max-w-3xl gap-stack-lg sm:grid-cols-3">
-          {content.team.members.map((member) => (
-            <TeamMemberCard key={member.id} member={member} />
-          ))}
+          {content.team.members
+            .sort((item) => item.order ?? 1)
+            .map((member) => (
+              <TeamMemberCard key={member.id} member={member} />
+            ))}
         </div>
       </section>
 

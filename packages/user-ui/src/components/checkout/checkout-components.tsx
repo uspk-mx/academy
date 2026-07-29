@@ -393,12 +393,12 @@ export function OrderSummaryPanel({
             <dd>{summary.discountLabel}</dd>
           </div>
           <div className="flex justify-between">
-            <dt>{labels.summaryFinalPrice}:</dt>
+            <dt>{labels.summaryFinalPrice}</dt>
             <dd>{formatMoney(summary.finalTotal)}</dd>
           </div>
           <div className="mt-stack flex justify-between border-t-2 border-border-strong pt-stack text-base font-bold">
             <dt>
-              {labels.summaryTotal}: ({summary.itemCount}{" "}
+              {labels.summaryTotal} ({summary.itemCount}{" "}
               {summary.itemCount === 1 ? "curso" : "cursos"}):
             </dt>
             <dd>{formatMoney(summary.finalTotal)}</dd>

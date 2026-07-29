@@ -99,7 +99,7 @@ export function AboutPage({ content, ctaBanner }: AboutPageProps) {
         </h2>
         <div className="mx-auto mt-stack-lg grid max-w-3xl gap-stack-lg sm:grid-cols-3">
           {content.team.members
-            .sort((item) => item.order ?? 1)
+            .sort((itemA, itemB) => itemA.order! - itemB.order!)
             .map((member) => (
               <TeamMemberCard key={member.id} member={member} />
             ))}

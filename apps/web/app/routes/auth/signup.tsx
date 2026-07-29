@@ -28,7 +28,12 @@ export async function action({ request, context }: Route.ActionArgs) {
   if (!fullName) fieldErrors.fullName = "required"
   if (!username) fieldErrors.username = "required"
   if (!email.includes("@")) fieldErrors.email = "invalidEmail"
-  if (password.length < 8) fieldErrors.password = "minPassword"
+  const strongPassword =
+    password.length >= 8 &&
+    /[0-9]/.test(password) &&
+    /[A-Z]/.test(password) &&
+    /[!@#~$%^&*(),.?":{}|<>]/.test(password)
+  if (!strongPassword) fieldErrors.password = "passwordPolicy"
   if (form.get("terms") !== "on") fieldErrors.terms = "termsRequired"
   if (Object.keys(fieldErrors).length > 0) return { fieldErrors }
 
@@ -57,7 +62,10 @@ export async function action({ request, context }: Route.ActionArgs) {
     for (const cookie of setCookies) headers.append("Set-Cookie", cookie)
     // Signup no longer logs in — the account must be confirmed by email first.
     return data({ success: true, email }, { headers })
-  } catch {
+  } catch (error: any) {
+    if (/already exists|ya existe/i.test(String(error?.message ?? ""))) {
+      return { formError: "emailTaken" }
+    }
     return { formError: "generic" }
   }
 }

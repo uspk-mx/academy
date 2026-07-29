@@ -67,6 +67,8 @@ export interface AuthErrorLabels {
   passwordMismatch: string
   invalidCredentials: string
   socialAuth: string
+  passwordPolicy: string
+  emailTaken: string
   invalidLink: string
   generic: string
 }

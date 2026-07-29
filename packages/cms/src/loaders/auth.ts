@@ -53,7 +53,7 @@ export const defaultAuthLabels: AuthLabels = {
     signupEmailLabel: "Correo electrónico",
     signupEmailPlaceholder: "tu@correo.com",
     signupPasswordLabel: "Crea una contraseña",
-    signupPasswordPlaceholder: "Mínimo 8 caracteres",
+    signupPasswordPlaceholder: "Mín. 8: número, mayúscula y símbolo",
     signupTermsPrefix: "Acepto los",
     signupTermsLabel: "Términos",
     signupTermsJoin: "y la",
@@ -124,8 +124,13 @@ export const defaultAuthLabels: AuthLabels = {
     passwordMismatch: "Las contraseñas no coinciden.",
     invalidCredentials: "Usuario o contraseña incorrectos.",
     socialAuth: "Esta cuenta usa Google. Inicia sesión con Google.",
+    passwordPolicy:
+      "La contraseña debe tener al menos 8 caracteres, un número, una mayúscula y un símbolo.",
+    emailTaken:
+      "Ese correo o usuario ya está registrado. Intenta iniciar sesión.",
     invalidLink: "El enlace no es válido o ya expiró. Solicita uno nuevo.",
-    generic: "Algo salió mal. Inténtalo de nuevo más tarde o contacta a soporte.",
+    generic:
+      "Algo salió mal. Inténtalo de nuevo más tarde o contacta a soporte.",
   },
 }
 

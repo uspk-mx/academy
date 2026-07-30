@@ -1,4 +1,6 @@
 import { getSubscriptionPlans } from "@academy/courses-api/graphql/queries/subscription-plans"
+import { getMe } from "@academy/courses-api/graphql/queries/me"
+import { getActiveUserSubscription } from "@academy/courses-api/graphql/student-app/queries/subscriptions"
 import {
   MembershipsPage,
   type MembershipPlanView,
@@ -37,12 +39,27 @@ export async function loader({ request }: Route.LoaderArgs) {
   } catch (error) {
     console.error("[memberships] failed to load plans:", error)
   }
-  return { plans }
+
+  let hasActiveSubscription = false
+  const me = await getMe(request)
+  const userId = me?.me?.customerId
+  if (userId) {
+    const result = await getActiveUserSubscription(request, userId)
+    hasActiveSubscription = !!result?.activeUserSubscription
+  }
+
+  return { plans, hasActiveSubscription }
 }
 
 export default function Memberships({
   loaderData,
   params,
 }: Route.ComponentProps) {
-  return <MembershipsPage plans={loaderData.plans} lang={params.lang} />
+  return (
+    <MembershipsPage
+      plans={loaderData.plans}
+      lang={params.lang}
+      hasActiveSubscription={loaderData.hasActiveSubscription}
+    />
+  )
 }

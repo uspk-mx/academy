@@ -1,4 +1,5 @@
 import { cn } from "@academy/user-ui/lib/utils"
+import { studentUrlFor } from "@academy/user-ui/lib/site-urls"
 import {
   IconArrowRight,
   IconCheck,
@@ -21,6 +22,7 @@ export interface MembershipPlanView {
 export interface MembershipsPageProps {
   plans: MembershipPlanView[]
   lang: string
+  hasActiveSubscription?: boolean
 }
 
 const money = new Intl.NumberFormat("es-MX", {
@@ -110,7 +112,11 @@ const FAQS = [
  * real B2C subscription (live data → checkout); Team & Enterprise are B2B,
  * which lives in a separate app, so they're lead-gen via email.
  */
-export function MembershipsPage({ plans, lang }: MembershipsPageProps) {
+export function MembershipsPage({
+  plans,
+  lang,
+  hasActiveSubscription,
+}: MembershipsPageProps) {
   // The cheapest live plan represents the individual "Personal" tier.
   const personal = [...plans].sort((a, b) => a.price - b.price)[0] ?? null
 
@@ -126,7 +132,11 @@ export function MembershipsPage({ plans, lang }: MembershipsPageProps) {
         </p>
       </div>
 
-      <Tiers personal={personal} lang={lang} />
+      <Tiers
+        personal={personal}
+        lang={lang}
+        hasActiveSubscription={hasActiveSubscription}
+      />
       <CompareTable />
       <Faq />
     </div>
@@ -165,12 +175,14 @@ function Faq() {
 function Tiers({
   personal,
   lang,
+  hasActiveSubscription,
 }: {
   personal: MembershipPlanView | null
   lang: string
+  hasActiveSubscription?: boolean
 }) {
   return (
-    <section className="sm:mx-auto grid max-w-page items-stretch gap-stack-lg px-page-x py-section-y sm:grid-cols-2 lg:grid-cols-3 lg:gap-stack">
+    <section className="grid max-w-page items-stretch gap-stack-lg px-page-x py-section-y sm:mx-auto sm:grid-cols-2 lg:grid-cols-3 lg:gap-stack">
       {/* Personal — real subscription */}
       <TierCard
         name="Personal"
@@ -198,14 +210,25 @@ function Tiers({
         ]}
         cta={
           personal ? (
-            <BrandButton
-              variant="secondary"
-              to={`/${lang}/subscribe?plan=${personal.id}`}
-              className="w-full"
-              withArrow
-            >
-              Empezar suscripción
-            </BrandButton>
+            hasActiveSubscription ? (
+              <BrandButton
+                variant="secondary"
+                to={studentUrlFor(lang, "/dashboard/subscription")}
+                className="w-full"
+                withArrow
+              >
+                Gestionar suscripción
+              </BrandButton>
+            ) : (
+              <BrandButton
+                variant="secondary"
+                to={`/${lang}/subscribe?plan=${personal.id}`}
+                className="w-full"
+                withArrow
+              >
+                Empezar suscripción
+              </BrandButton>
+            )
           ) : (
             <span className={cn(mailtoBtn, "cursor-not-allowed opacity-60")}>
               Próximamente

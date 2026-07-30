@@ -421,7 +421,7 @@ function ActionButtons({
     <BrandButton
       variant="secondary"
       size="lg"
-      to="/#precios"
+      to={`/${lang ?? "es"}/memberships`}
       className="w-full"
     >
       {labels.trialCta}

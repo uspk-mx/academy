@@ -1,0 +1,17 @@
+# Consistent local toolchain for the frontend monorepo (install / build /
+# typecheck / format) — so these run identically on any machine, no local bun
+# or Node needed. LOCAL ONLY: production builds run on Vercel after a PR.
+#
+# Node + Bun both live here on purpose: bun is the package manager, but the
+# React Router / Vite build is a Node tool (it uses @babel/traverse, which
+# breaks under the bun runtime). With Node present, `bun run` delegates the
+# node-shebang bins to Node, exactly like a dev's machine with Node installed.
+#
+# Source and node_modules are provided at runtime by docker-compose (a bind
+# mount + named volumes), so nothing is COPY'd or installed into the image.
+FROM node:22-slim
+
+# Bun as the package manager (matches packageManager in package.json).
+RUN npm install -g bun@1.2.11
+
+WORKDIR /app

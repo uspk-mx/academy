@@ -29,6 +29,7 @@ async function proxy(
   const headers = new Headers(request.headers)
   headers.delete("host") // let fetch set it to the upstream host
   headers.delete("cookie") // never leak the app session cookie to PostHog
+  headers.delete("authorization") // never leak the staging Basic Auth creds to PostHog (they'd 400)
 
   const isBodyless = request.method === "GET" || request.method === "HEAD"
   const upstream = await fetch(target, {

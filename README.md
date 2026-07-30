@@ -89,6 +89,18 @@ Run a single app instead:
 cd apps/web && bun run dev      # or apps/student
 ```
 
+### No local Bun/Node? Use Docker
+
+A containerized toolchain runs the same commands (see `Makefile` / `docker-compose.yml`):
+
+```bash
+make install     # install deps into the container's volumes
+make dev         # both apps with HMR — web :5173, student :5174
+make typecheck   # or: make build / make format
+```
+
+`make dev` uses file-system polling so HMR works over the macOS bind mount, and reaches your **host-native Go API** at `:4000` via `host.docker.internal` (run the API on the host, not in this compose).
+
 ---
 
 ## Environment variables

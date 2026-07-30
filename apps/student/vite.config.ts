@@ -4,6 +4,7 @@ import { defineConfig, loadEnv } from "vite"
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "")
+  const inDocker = !!process.env.DOCKER_DEV
 
   return {
     plugins: [tailwindcss(), reactRouter()],
@@ -14,6 +15,8 @@ export default defineConfig(({ mode }) => {
       noExternal: true,
     },
     server: {
+      host: inDocker,
+      watch: inDocker ? { usePolling: true } : undefined,
       proxy: {
         "/ingest/static": {
           target: "https://us-assets.i.posthog.com",

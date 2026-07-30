@@ -1,0 +1,11 @@
+# Keeps the build context small. (The dev image doesn't COPY source — it's bind
+# mounted — but this still speeds up `docker compose build` and is good hygiene.)
+**/node_modules
+**/build
+**/.react-router
+**/dist
+.git
+.turbo
+**/.env
+**/*.log
+.DS_Store

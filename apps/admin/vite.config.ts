@@ -1,6 +1,6 @@
-import { reactRouter } from "@react-router/dev/vite"
-import tailwindcss from "@tailwindcss/vite"
-import { defineConfig, loadEnv } from "vite"
+import { reactRouter } from "@react-router/dev/vite";
+import tailwindcss from "@tailwindcss/vite";
+import { defineConfig, loadEnv } from 'vite';
 
 const reactExternals = [
   "react",
@@ -22,7 +22,12 @@ export default defineConfig(({ mode }) => {
     },
     ssr: {
       noExternal: true,
-      external: reactExternals,
+      external: [
+        ...reactExternals,
+        // CJS-only; forcing it through the ESM module runner blows up with
+        // "module is not defined" during dev SSR. Reaches us via sonner.
+        "use-sync-external-store",
+      ],
     },
     server: {
       host: inDocker,

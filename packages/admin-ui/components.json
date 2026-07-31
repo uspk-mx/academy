@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "base-rhea",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true
+  },
+  "iconLibrary": "tabler",
+  "aliases": {
+    "components": "@academy/admin-ui/components",
+    "utils": "@academy/admin-ui/lib/utils",
+    "hooks": "@academy/admin-ui/hooks",
+    "lib": "@academy/admin-ui/lib",
+    "ui": "@academy/admin-ui/components"
+  },
+  "rtl": false,
+  "menuColor": "default",
+  "menuAccent": "subtle"
+}

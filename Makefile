@@ -1,40 +1,61 @@
-# Frontend monorepo — local dev toolchain, run inside Docker for a consistent
-# bun environment on any machine. No local bun/Node needed. Production builds
-# run on Vercel (after a PR), NOT here.
+# Frontend monorepo — local toolchain executed inside Docker.
+# No local Bun/Node installation required.
 #
 # First time:   make install
-# Every day:    make dev   (both apps, HMR — web :5173, student :5174)
-# Before a PR:  make typecheck / make build / make format
-# Fresh start:  make clean && make install
+# Every day:    make dev
+#
+# Apps:
+#   web      http://localhost:5173
+#   student  http://localhost:5174
+#   admin    http://localhost:5175
+#
+# Before PR:    make check
+# Fresh install: make reinstall
+#
+# Production deployments are handled by Vercel.
 
-DC := docker compose run --rm app
+.DEFAULT_GOAL := help
 
-.PHONY: help install dev build typecheck format sh clean
+COMPOSE ?= docker compose
+RUN := $(COMPOSE) run --rm --no-deps app
 
-help: ## Show this help
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-	  | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
+.PHONY: help install reinstall dev down build typecheck format check shell clean
 
-install: ## Install deps into the container's node_modules volumes
-	$(DC) bun install
+help: ## Show available commands
+	@awk 'BEGIN {FS = ":.*## "}; \
+		/^[a-zA-Z0-9_-]+:.*## / { \
+			printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2 \
+		}' $(MAKEFILE_LIST)
 
-dev: ## Run both apps with HMR in Docker (web :5173, student :5174)
-	docker compose up dev
 
-build: ## Production build of both apps (sanity check before a PR)
-	$(DC) bun run build
+install: ## Install the exact dependencies from bun.lock
+	$(RUN) bun install --frozen-lockfile
 
-typecheck: ## Type-check the whole workspace (tsc --noEmit)
-	$(DC) bun run typecheck
+dev: ## Run all apps with HMR
+	$(COMPOSE) up --build dev
 
-format: ## Format with Prettier
-	$(DC) bun run format
+down: ## Stop the development environment
+	$(COMPOSE) down --remove-orphans
 
-sh: ## Open a shell in the toolchain container
-	$(DC) bash
+build: ## Build all apps as a pre-PR sanity check
+	$(RUN) bun run build
 
-clean: ## Remove the node_modules volumes (next `make install` is fresh)
-	docker compose down -v
+typecheck: ## Type-check the entire workspace
+	$(RUN) bun run typecheck
+
+format: ## Format the entire workspace
+	$(RUN) bun run format
+
+check: typecheck build ## Run all non-mutating pre-PR checks
+
+shell: ## Open a shell inside the toolchain container
+	$(RUN) sh
+
+clean: down ## Remove generated node_modules directories
+	$(RUN) sh -lc \
+		'find /app -type d -name node_modules -prune -exec rm -rf -- {} +'
+
+reinstall: clean install ## Recreate node_modules from bun.lock
 
 # NOTE: `test` / `lint` targets go here once those scripts exist in the repo.
 # NOTE: `make dev` uses file-system polling so HMR works over the macOS bind

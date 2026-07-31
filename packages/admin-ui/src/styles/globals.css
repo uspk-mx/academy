@@ -1,0 +1,7 @@
+/* The admin panel rides on the same design system as the public/student apps.
+   Rather than fork the token set, pull user-ui's stylesheet in and only add
+   admin-ui's own files to Tailwind's source scan. */
+@import "@academy/user-ui/globals.css";
+
+@source "../**/*.{ts,tsx}";
+@source "../../../../apps/admin/**/*.{ts,tsx}";

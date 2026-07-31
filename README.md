@@ -1,6 +1,6 @@
 # USPK Academy — Frontend Monorepo
 
-Online course platform (LMS). This repo holds the **two frontends** and the
+Online course platform (LMS). This repo holds the **three frontends** and the
 **shared packages**. The GraphQL API is a **separate Go repo** (see below).
 
 > New here? Read this top-to-bottom, then ask the CTO for the `.env` values and
@@ -15,6 +15,7 @@ flowchart LR
   subgraph Browser
     W["web · uspkacademy.com<br/>(marketing, auth, checkout)"]
     S["student · app.uspkacademy.com<br/>(the LMS)"]
+    A["admin · admin.uspkacademy.com<br/>(back office)"]
   end
   API["Go GraphQL API<br/>api.uspkacademy.com<br/>(separate repo)"]
   HG["Hygraph CMS<br/>(marketing copy)"]
@@ -24,6 +25,7 @@ flowchart LR
 
   W -->|"/query (SSR loaders)"| API
   S -->|"/query (SSR loaders)"| API
+  A -->|"/query (SSR loaders)"| API
   W -->|"server-side, read-only"| HG
   API --> PG
   API --> RD
@@ -32,10 +34,11 @@ flowchart LR
 
 - **`apps/web`** — marketing site + **auth** (login/signup/Google) + cart + checkout + memberships. Content is **Hygraph-driven** (CMS). Has PostHog analytics. Lives on the apex `uspkacademy.com`.
 - **`apps/student`** — the actual LMS (dashboard, course viewer, quizzes, certificates). API-driven, **no CMS**. Lives on `app.uspkacademy.com`.
+- **`apps/admin`** — the back office: courses + curriculum builder, taxonomy, bundles, learning paths, memberships, enrollments, companies, certificate templates. Staff-only, Spanish-only (**no `:lang` prefix**), **no CMS**. Lives on `admin.uspkacademy.com`.
 - **Go API** (separate repo, sibling `../server`) — GraphQL (gqlgen), Postgres, Redis (sessions + OAuth state), Stripe, Google OAuth, email (Resend), media (Cloudinary / DO Spaces).
 - **Hygraph** — headless CMS for marketing copy only. Read server-side; the token never reaches the browser.
 
-Both apps are **React Router v7 (framework mode, SSR)** — loaders/actions run on the server, `:lang`-prefixed routes for i18n (`es` / `en`), branded `ErrorBoundary`.
+All three apps are **React Router (framework mode, SSR)** — loaders/actions run on the server, branded `ErrorBoundary`. Web and student use `:lang`-prefixed routes for i18n (`es` / `en`); admin is Spanish-only and unprefixed.
 
 ---
 
@@ -45,12 +48,14 @@ Both apps are **React Router v7 (framework mode, SSR)** — loaders/actions run 
 apps/
   web/        marketing + auth + checkout   (uspkacademy.com)
   student/    the LMS                        (app.uspkacademy.com)
+  admin/      back office                    (admin.uspkacademy.com)
 packages/
   courses-api/   gql.tada client to the Go API (schema in src/graphql/schema.graphql)
   cms/           gql.tada client to Hygraph (server-only)
   graphql-utils/ shared urql client factory
   user-ui/       shared UI, brand components, auth pages, middleware, lib (lang, site-urls, seo)
   student-ui/    student-only UI (certificate PDF, sidebar, …)
+  admin-ui/      back-office UI (shell, tables, form sheets, pickers) — builds on user-ui
 ```
 
 Tooling: **bun** workspaces + **Turborepo**. Node ≥ 20.
@@ -74,14 +79,16 @@ bun install
 # 2. env: copy each example and fill in the values (ask the CTO)
 cp apps/web/.env.example apps/web/.env
 cp apps/student/.env.example apps/student/.env
+cp apps/admin/.env.example apps/admin/.env
 
-# 3. run everything (both apps) via turbo
+# 3. run everything (all apps) via turbo
 bun run dev
 ```
 
 - **web** → `http://localhost:5173`
 - **student** → `http://localhost:5174`
-- Both expect the Go API at `http://localhost:4000/query` (default `VITE_API_URL`).
+- **admin** → `http://localhost:5175`
+- All three expect the Go API at `http://localhost:4000/query` (default `VITE_API_URL`).
 
 Run a single app instead:
 
@@ -95,7 +102,7 @@ A containerized toolchain runs the same commands (see `Makefile` / `docker-compo
 
 ```bash
 make install     # install deps into the container's volumes
-make dev         # both apps with HMR — web :5173, student :5174
+make dev         # all apps with HMR — web :5173, student :5174, admin :5175
 make typecheck   # or: make build / make format
 ```
 
@@ -109,8 +116,8 @@ Each app has a documented `.env.example` — copy it to `.env` and fill in. High
 
 | Var | Where | Notes |
 |---|---|---|
-| `VITE_API_URL` | both | Go API `/query` endpoint. `VITE_*` are **inlined at build** (public). |
-| `VITE_PUBLIC_POSTHOG_PROJECT_TOKEN` / `_HOST` | both | Analytics (public token). Web + student share one project. |
+| `VITE_API_URL` | all | Go API `/query` endpoint. `VITE_*` are **inlined at build** (public). |
+| `VITE_PUBLIC_POSTHOG_PROJECT_TOKEN` / `_HOST` | all | Analytics (public token). All apps share one project. |
 | `VITE_STRIPE_PUBLISHABLE_KEY` | web | Publishable (safe in the client). The **secret** key lives only in the Go API. |
 | `HYGRAPH_CONTENT_ENDPOINT` / `HYGRAPH_AUTH_TOKEN` | web | **Server-only** (no `VITE_` prefix) — never shipped to the browser. |
 | `AUTH_BASE_URL` / `VITE_AUTH_BASE_URL` | student | Where `/login` lives (the web app) — auth is cross-origin from the student app in prod. |
